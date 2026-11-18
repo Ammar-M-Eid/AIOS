@@ -15,14 +15,14 @@ Container_Boundary(scope, "Telemetry Collector") {
 ContainerDb_Ext(S1, "Telemetry Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
 System_Ext(S2, "Ubuntu procfs / PSI / psutil", "Host-provided Linux interface")
 System_Ext(S3, "Ubuntu optional eBPF interface", "Host-provided Linux interface")
-Rel(C2, C1, "ISampleCycle", "Named local interface", $tags="dashed")
-Rel(C4, C2, "IRawHostSample", "Named local interface", $tags="dashed")
-Rel(C4, C3, "IRawProbeSample", "Named local interface", $tags="dashed")
-Rel(C5, C4, "IQualityCheckedSample", "Named local interface", $tags="dashed")
-Rel(C6, C5, "ITelemetryRecord", "Named local interface", $tags="dashed")
-Rel(C6, S1, "ITelemetryStoreWrite", "Named local interface", $tags="dashed")
-Rel(C2, S2, "IHostTelemetryRead", "Named local interface", $tags="dashed")
-Rel(C3, S3, "IFixedProbeRead", "Named local interface", $tags="dashed")
+Rel(C2, C1, "uses sampling cycle from", "ISampleCycle", $tags="dashed")
+Rel(C4, C2, "reads host sample from", "IRawHostSample", $tags="dashed")
+Rel(C4, C3, "reads optional probe sample from", "IRawProbeSample", $tags="dashed")
+Rel(C5, C4, "uses validated sample from", "IQualityCheckedSample", $tags="dashed")
+Rel(C6, C5, "uses normalized record from", "ITelemetryRecord", $tags="dashed")
+Rel(C6, S1, "persists accepted sample to", "ITelemetryStoreWrite", $tags="dashed")
+Rel(C2, S2, "reads CPU, RAM, I/O, PSI", "IHostTelemetryRead", $tags="dashed")
+Rel(C3, S3, "reads approved eBPF probe", "IFixedProbeRead", $tags="dashed")
 note bottom
 This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
 end note

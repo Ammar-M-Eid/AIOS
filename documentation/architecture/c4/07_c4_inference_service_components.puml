@@ -13,13 +13,13 @@ Container_Boundary(scope, "AI Inference Service") {
 Container_Ext(S1, "Decision & Policy Prediction Client", "Supporting service", "Directly connected container outside the scope")
 ContainerDb_Ext(S2, "Telemetry Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
 Container_Ext(S3, "Selected generic runtime boundary", "Supporting service", "Directly connected container outside the scope")
-Rel(S1, C1, "IInference", "Named local interface", $tags="dashed")
-Rel(C1, C2, "IEvidenceWindow", "Named local interface", $tags="dashed")
-Rel(C2, S2, "ITelemetryRead", "Named local interface", $tags="dashed")
-Rel(C1, C3, "IModelRuntime", "Named local interface", $tags="dashed")
-Rel(C1, C4, "IPredictionValidation", "Named local interface", $tags="dashed")
-Rel(C4, C3, "IGenericPredictionResult", "Named local interface", $tags="dashed")
-Rel(C3, S3, "IGenericInferenceRuntime", "Named local interface", $tags="dashed")
+Rel(S1, C1, "requests validated prediction", "IInference", $tags="dashed")
+Rel(C1, C2, "loads bounded evidence window", "IEvidenceWindow", $tags="dashed")
+Rel(C2, S2, "reads telemetry history", "ITelemetryRead", $tags="dashed")
+Rel(C1, C3, "invokes model adapter", "IModelRuntime", $tags="dashed")
+Rel(C1, C4, "validates prediction and freshness", "IPredictionValidation", $tags="dashed")
+Rel(C4, C3, "supplies prediction result", "IGenericPredictionResult", $tags="dashed")
+Rel(C3, S3, "invokes inference runtime", "IGenericInferenceRuntime", $tags="dashed")
 note bottom
 This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
 end note

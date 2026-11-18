@@ -24,3 +24,7 @@ Relationships in this project’s C4 views are drawn as dashed, directed arrows 
 The architecture is a design proposal. Linux interface availability, target Ubuntu behavior, I/O control support, and safe actuation/rollback require implementation and target-host validation. `OBSERVE_ONLY` is the default; people use read-only dashboard views.
 
 For related UML, sequence, activity, use-case, state, class, data-flow, and decision diagrams, see [the supporting diagram set](../uml-and-supporting-diagrams/AIOS_Diagram_Notation_Audit.md).
+
+## Component relationship label clarification — 19 November 2026
+
+Each component connector is labeled with both the consumer action and the named interface contract (for example, “validates request using · IRequestValidation”). The label sits beside the dashed relationship without an opaque white background, so the connector path remains visible. Arrowheads point from the component requiring a service toward its provider. Request/response exchanges carried over one connection use the same endpoint contract.

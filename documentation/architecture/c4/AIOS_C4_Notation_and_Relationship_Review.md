@@ -63,3 +63,7 @@ The actuator view shows the only privileged writer. The socket endpoint forwards
 - [C4 diagram checklist](https://c4model.com/diagrams/checklist)
 - [Linux Pressure Stall Information](https://docs.kernel.org/accounting/psi.html)
 - [Linux cgroup v2](https://docs.kernel.org/admin-guide/cgroup-v2.html)
+
+## Component relationship labels and connector visibility — 19 November 2026
+
+The regenerated component diagrams label every dashed connector with an action phrase and its interface contract name. This makes the relationship semantics visible instead of showing only the required/provided interface names. Label text has no opaque white backing and is positioned adjacent to the route, leaving the connector itself visible. Arrows indicate dependency direction from consumer to provider, following the project convention; the UML assembly connector has no intrinsic direction. Where a single transport exchanges requests and outcomes, the external relation uses one endpoint contract and its component description documents both directions.

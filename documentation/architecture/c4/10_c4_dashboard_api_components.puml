@@ -13,13 +13,13 @@ Container_Boundary(scope, "Read-only Dashboard API") {
 Person(S1, "Human Viewer", "Read-only client of the dashboard")
 ContainerDb_Ext(S2, "Telemetry & Read-Projection Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
 ContainerDb_Ext(S3, "Audit Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
-Rel(S1, C1, "IDashboardRead", "Named local interface", $tags="dashed")
-Rel(C3, C2, "IReadModel", "Named local interface", $tags="dashed")
-Rel(C1, C3, "IResponseDTO", "Named local interface", $tags="dashed")
-Rel(C4, C3, "IResponseDTO", "Named local interface", $tags="dashed")
-Rel(C1, C4, "IResponseSafety", "Named local interface", $tags="dashed")
-Rel(C2, S2, "ITelemetryRead", "Named local interface", $tags="dashed")
-Rel(C2, S3, "IAuditRead", "Named local interface", $tags="dashed")
+Rel(S1, C1, "requests read-only view from", "IDashboardRead", $tags="dashed")
+Rel(C3, C2, "queries read model from", "IReadModel", $tags="dashed")
+Rel(C1, C3, "uses mapped response data from", "IResponseDTO", $tags="dashed")
+Rel(C4, C3, "uses mapped response data from", "IResponseDTO", $tags="dashed")
+Rel(C1, C4, "validates response using", "IResponseSafety", $tags="dashed")
+Rel(C2, S2, "reads telemetry history", "ITelemetryRead", $tags="dashed")
+Rel(C2, S3, "reads audit projection from", "IAuditRead", $tags="dashed")
 note bottom
 This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
 end note
