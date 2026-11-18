@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Deployment>
+title C4 Deployment Diagram — Proposed Ubuntu 24.04 Single-Host Profile
+AddRelTag("dashed", $lineStyle=DashedLine())
+Deployment_Node(host, "Linux host", "Physical or virtual machine") {
+  Deployment_Node(ubuntu, "Ubuntu 24.04", "Linux execution environment") {
+    Deployment_Node(systemd, "systemd", "Host service supervisor") {
+      Container(collector, "Telemetry Collector", "Python", "Read-only CPU/RAM/I/O sampling")
+      Container(inference, "AI Inference Service", "Python · proposed", "Validated generic prediction boundary")
+      Container(policy, "Decision & Policy Service", "Python · proposed", "Policy admission and resource-specific gates")
+      Container(watchdog, "Safety Watchdog", "Python · proposed", "Health, freshness, inhibit, and guarded recovery")
+      Container(actuator, "Resource Manager / Actuator", "Python · Unix socket", "Only proposed host writer")
+      Container(dashboard, "Read-only Dashboard API", "Python · FastAPI", "Read-only user access")
+    }
+    ContainerDb(telemetry, "Telemetry & Read-Projection Store", "SQLite", "Bounded samples and read models")
+    ContainerDb(audit, "Audit Store", "SQLite · separate database", "Append-only hash-chain security and action evidence")
+  }
+}
+System_Ext(kernel, "Linux kernel interfaces", "procfs · PSI · cgroups v2")
+Person(viewer, "Human viewer", "Read-only dashboard access")
+Rel(viewer, dashboard, "Reads status and recommendations", "Local HTTP GET", $tags="dashed")
+Rel(collector, kernel, "Reads host telemetry", "procfs / PSI", $tags="dashed")
+Rel(actuator, kernel, "Applies and verifies guarded controls", "cgroups v2", $tags="dashed")
+SHOW_LEGEND()
+@enduml

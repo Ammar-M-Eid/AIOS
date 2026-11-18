@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Dynamic>
+title C4 Dynamic Diagram — One Telemetry-to-Action Scenario
+AddRelTag("dashed", $lineStyle=DashedLine())
+Person(viewer, "Human Viewer", "Reads read-only dashboard projections")
+System_Boundary(aios, "AIOS") {
+  Container(collector, "Telemetry Collector", "Python · psutil / procfs / PSI", "Collects and validates CPU, RAM, I/O, and pressure observations")
+  Container(policy, "Decision & Policy Service", "Proposed Python service", "Evaluates policy and independently gated resource decisions")
+  Container(inference, "AI Inference Service", "Proposed generic service", "Returns a validated prediction")
+  Container(actuator, "Resource Manager / Actuator", "Python · authenticated Unix socket", "Only proposed writer to host resource controls")
+  Container(dashboard, "Read-only Dashboard API", "Python · FastAPI", "Serves status and audit projections")
+  ContainerDb(telemetry, "Telemetry & Read-Projection Store", "SQLite", "Bounded samples, freshness metadata, read models")
+  ContainerDb(audit, "Audit Store", "SQLite · separate database", "Append-only hash-chain audit events and action evidence")
+}
+System_Ext(host, "Ubuntu 24.04 host", "procfs · PSI · cgroups v2")
+Rel($index="01", collector, host, "Reads host telemetry", "procfs / PSI", $tags="dashed")
+Rel($index="02", collector, telemetry, "Appends accepted samples", "SQLite", $tags="dashed")
+Rel($index="03", policy, telemetry, "Reads bounded process context", "SQLite", $tags="dashed")
+Rel($index="04", inference, telemetry, "Reads bounded evidence window", "SQLite", $tags="dashed")
+Rel($index="05", policy, inference, "Requests a generic prediction", "Local IPC · proposed", $tags="dashed")
+Rel($index="06", inference, policy, "Returns validated prediction", "Local IPC · proposed", $tags="dashed")
+Rel($index="07", policy, actuator, "Submits a policy-admitted action", "Authenticated Unix socket", $tags="dashed")
+Rel($index="08", actuator, host, "Applies and reads back gated limits", "cgroups v2", $tags="dashed")
+Rel($index="09", actuator, audit, "Appends action and verification outcome", "Local append-only log", $tags="dashed")
+Rel($index="10", actuator, policy, "Returns verified action outcome", "Same authenticated socket", $tags="dashed")
+Rel($index="11", viewer, dashboard, "Reads status and recommendations", "Local HTTP GET", $tags="dashed")
+Rel($index="12", dashboard, telemetry, "Reads status projection", "SQLite read-only", $tags="dashed")
+Rel($index="13", dashboard, audit, "Reads audit projection", "Local read API · proposed", $tags="dashed")
+SHOW_LEGEND()
+@enduml

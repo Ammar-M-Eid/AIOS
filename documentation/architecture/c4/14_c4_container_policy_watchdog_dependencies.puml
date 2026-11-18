@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+title C4 Container Diagram — Policy and Watchdog Dependencies
+LAYOUT_TOP_DOWN()
+AddRelTag("dashed", $lineStyle=DashedLine())
+System_Ext(systemd, "systemd service manager", "Local service state")
+System_Boundary(aios, "AIOS software system") {
+  Container(policy, "Decision & Policy Service", "Proposed Python service", "Builds per-process decisions; applies OBSERVE_ONLY defaults and independent resource gates.")
+  Container(actuator, "Resource Manager / Actuator", "Python · Unix socket · SO_PEERCRED · cgroups v2", "Only proposed host writer; applies separately gated CPU, RAM, and supported I/O limits.")
+  Container(watchdog, "Safety Watchdog", "Proposed Python service · systemd supervised", "Monitors health and freshness; inhibits writes and requests guarded recovery.")
+}
+Rel(policy, actuator, "uses verified result — IActionOutcome", "Unix socket response", $tags="dashed")
+Rel(watchdog, systemd, "reads service state — IServiceHealth", "systemd local status", $tags="dashed")
+Rel(watchdog, policy, "requests write inhibit — IPolicyInhibit", "local IPC TBD", $tags="dashed")
+Rel(watchdog, actuator, "requests guarded recovery — IActionRequest", "authenticated Unix socket", $tags="dashed")
+Rel(watchdog, actuator, "uses verified result — IActionOutcome", "Unix socket response", $tags="dashed")
+SHOW_LEGEND()
+@enduml

@@ -1,0 +1,28 @@
+---
+title: AIOS Separate Audit Store — EERD (proposed)
+---
+erDiagram
+    direction LR
+
+    AUDIT_CHAIN_HEAD ||--o{ AUDIT_EVENT : orders
+
+    AUDIT_CHAIN_HEAD {
+        text chain_id PK
+        int next_sequence
+        text head_hash_hex
+        text updated_at_utc
+    }
+    AUDIT_EVENT {
+        int sequence_no PK
+        text event_id UK
+        text chain_id FK
+        text occurred_at_utc
+        text event_type
+        text correlation_id
+        text run_id
+        text decision_id
+        text action_attempt_id
+        text payload_json
+        text previous_hash_hex
+        text event_hash_hex UK
+    }

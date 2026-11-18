@@ -1,0 +1,61 @@
+---
+title: "Conceptual UML Class Model — Resource Monitoring and Action Audit"
+---
+%% Conceptual UML class model; fields, persistence and multiplicities are not approved schema
+classDiagram
+direction TB
+
+class HostSample {
+  sampleKey: conceptual
+  capturedAtUtc: timestamp
+  hostMetrics: CPU, memory, I/O, PSI
+}
+class ProcessInstance {
+  processRef: proposed stable reference
+  pid: observed identifier
+  startTime: proposed reuse guard
+}
+class ProcessSample {
+  capturedAtUtc: timestamp
+  cpuAndMemory: observed metrics
+  ioMetrics: optional
+  quality: flags and freshness
+}
+class PredictionOutput {
+  capturedAtUtc: timestamp
+  processRef: conceptual link
+  output: generic prediction
+  uncertainty: if provided
+}
+class Decision {
+  outcome: LEAVE or proposal
+  reason: explanation
+  status: proposed or denied
+}
+class ActionExecution {
+  action: whitelisted type
+  target: approved process group
+  priorValue: if captured
+  result: applied or denied
+}
+class AuditEvent {
+  eventTime: timestamp
+  eventType: conceptual category
+  previousHash: chain link
+  eventHash: integrity value
+}
+
+HostSample "1" -- "0..*" ProcessSample : provides context for
+ProcessInstance "1" -- "0..*" ProcessSample : has samples
+ProcessInstance "1" -- "0..*" PredictionOutput : receives output
+ProcessSample "0..*" -- "0..*" PredictionOutput : contributes input
+ProcessInstance "1" -- "0..*" Decision : is target of
+PredictionOutput "0..*" -- "0..*" Decision : informs
+Decision "1" -- "0..1" ActionExecution : may lead to
+Decision "0..1" -- "0..*" AuditEvent : may be recorded by
+ActionExecution "0..1" -- "0..*" AuditEvent : may be recorded by
+
+note for ProcessInstance "PID plus process start time is a proposed identity guard against PID reuse; exact keys are not approved."
+note for PredictionOutput "Generic output only; model type, algorithm and internal schema remain colleague-owned."
+note for AuditEvent "Event categories may include decision, denial, action result and fallback; exact taxonomy, retention and storage remain open."
+note for Decision "Conceptual logical model only. SQLite is proposed for accepted telemetry and read-only recommendation projection; this diagram does not approve physical tables."

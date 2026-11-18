@@ -1,0 +1,10 @@
+﻿ID,Workstream,Owner,Start,Finish,Status 2026-11-13,Note
+GP1-01,"Problem, user and market evidence",Team; Ammar feature traceability,2026-10,2026-11,Not verified in provided deliverables,Survey and evidence review pending.
+GP1-02,"Requirements, interface, software design",Ammar + Mazen + AI owners,2026-10,2026-11,Draft prepared here; approval pending,Design is not implementation evidence.
+GP1-03,Midterm presentation,All five,2026-11-19,2026-11-19,Scheduled,Date printed in official template.
+GP1-04,"Research, dataset inventory, initial evidence",Research/AI owners,2026-10,2026-12,Initial VM capture completed; target data pending,"One passive Ubuntu 26.04.1 VM sample is included; target Ubuntu 24.04 recording, labeled workload, and supervisor review remain pending. Other dates are tentative."
+GP2-01,Collector/dashboard/interface integration,Ammar + AI owners,2026-12,2027-02,Planned / not evidenced,After shared field/privacy agreement.
+GP2-02,Labeled workload recordings,AI owners + collection support,2027-01,2027-03,Planned; target Linux run pending,An Ubuntu 26.04.1 VM sample exists for collector-format evidence only; collect labeled recordings on the authorized Ubuntu 24.04 target.
+GP2-03,Baselines and generic prediction integration,AI owners; SE interface support,2027-02,2027-04,Planned,AI internals colleague-owned.
+GP2-04,"Policy/security and bounded CPU, RAM, and I/O control",Mazen + Ammar,2027-02,2027-04,Planned / design only,"OBSERVE_ONLY first; CPU cpu.weight, RAM memory.high, and supported io.weight/io.max are staged behind independent capability/security gates; unsupported controls remain recommendations."
+GP2-05,"Evaluation, report and final demonstration",All five,2027-04,2027-05,Planned,Project window Oct 2026–May 2027; exact dates TBD.

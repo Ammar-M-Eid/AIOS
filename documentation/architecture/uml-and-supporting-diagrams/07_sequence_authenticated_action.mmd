@@ -1,0 +1,71 @@
+---
+title: "UML-Style Sequence Diagram — authenticated action and recovery"
+---
+%% Sequence messages follow control flow; exact messages remain proposed
+sequenceDiagram
+  autonumber
+  participant C as Collector
+  participant DB as SQLite telemetry + projection store
+  participant I as Inference Services
+  participant D as Decision Builder
+  participant P as Policy Gate
+  participant S as Unix Domain Socket
+  participant A as Actuator / peer authenticator
+  participant OS as Ubuntu OS
+  participant L as Audit Log
+  participant W as Watchdog
+  participant B as Human Browser
+  participant F as Read-only Dashboard API
+  C->>C: Collect and validate host/process metrics
+  C->>DB: Persist accepted samples
+  I->>DB: Read telemetry window
+  DB-->>I: Return accepted telemetry window
+  I->>D: Generic prediction outputs per process
+  D->>DB: Persist recommendation projection for read-only view
+  D->>P: Propose LEAVE or bounded action per process
+  P->>P: Check host-local mode, target, allowlist, bounds and rate limit
+  alt OBSERVE_ONLY, LEAVE, or denied proposal
+    P->>L: Append recommendation / decision reason
+  else reviewed host-local policy permits one bounded CPU, RAM, or supported I/O control
+    P->>S: Connect and send bounded request
+    S->>A: Deliver local request
+    A->>A: Read peer credentials with SO_PEERCRED
+    alt peer not permitted or request invalid
+      A-->>S: Reject, no OS write
+      S-->>P: Return denial
+      A->>L: Append security denial
+    else peer and request accepted
+      A->>A: Recheck process identity, target, allowlist and bounds
+      alt action unsafe or target unavailable
+        A-->>S: Deny / no-op
+        S-->>P: Return denial
+        A->>L: Append denial and reason
+      else action safe
+        A->>OS: Capture prior value, apply admitted resource-specific control
+        OS-->>A: Write result / observable effect
+        A->>L: Append action, outcome and hash link
+      end
+    end
+  end
+  opt heartbeat stale or unsafe condition
+    W->>P: Block new AI proposals
+    W->>S: Request bounded rollback through the same local socket
+    S->>A: Deliver fallback request
+    A->>A: Check watchdog peer with SO_PEERCRED and authorize request class
+    A->>A: Recheck recorded target ownership and captured baseline
+    alt rollback remains safe
+      A->>OS: Restore captured resource-control baseline
+      OS-->>A: Rollback result
+      A->>L: Append fallback and rollback outcome
+    else target or baseline no longer verifiable
+      A->>L: Append fail-closed fallback, no write
+    end
+  end
+  opt human reads status on separate read-only path
+    B->>F: Request status / recommendations / audit view
+    F->>DB: Read-only query
+    DB-->>F: Current telemetry / recommendation projection
+    F->>L: Read-only audit query
+    L-->>F: Audit projection
+    F-->>B: Display only, no control request is accepted
+  end

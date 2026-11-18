@@ -1,0 +1,9 @@
+﻿resource,candidate_gate,measurement,status,fallback
+CPU,CPUQuota <=20% of one logical CPU (candidate only),"cpu.stat/process CPU seconds, mean/p95",Provisional hypothesis,Observe-only; revise cadence/compute after review
+Foreground impact,p95 regression <=5% vs matched baseline (candidate),Same-host paired workload runs,Provisional hypothesis,No control if exceeded
+Freshness,p95 sample-to-decision age <=2s at candidate 1s cadence,Monotonic stage timestamps,Provisional hypothesis,Stale input yields LEAVE
+Framework RSS,<=128 MiB excluding model/runtime,Service RSS and cgroup memory.current,Provisional hypothesis,Reduce window; no memory.max initially
+Model RSS,TBD pending colleague model/runtime,Steady/peak RSS per service,Unbudgeted dependency,No deployment sign-off until measured
+SQLite,"<=512 MiB incl. WAL; <=7 days, whichever first",DB/WAL/journal sizes,Provisional hypothesis,Bound telemetry retention; audit rules reviewed separately
+eBPF,Off by default; <=1% one CPU average if enabled,A/B CPU/RSS/event loss,Provisional hypothesis,Leave disabled
+Network,"Read-only, local-only candidate","Routes, listeners, permissions",Proposed,Disable remote access pending review

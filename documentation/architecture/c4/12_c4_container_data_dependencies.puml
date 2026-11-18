@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+title C4 Container Diagram — Dashboard Read Dependencies
+LAYOUT_TOP_DOWN()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Person(viewer, "Human Viewer", "Read-only dashboard access")
+System_Boundary(aios, "AIOS software system") {
+  Container(dashboard, "Read-only Dashboard API", "Python · FastAPI", "Serves status, recommendation, health, and audit projections. Human access is read-only.")
+  ContainerDb(telemetry, "Telemetry & Read-Projection Store", "Proposed local interface", "Local data container")
+  ContainerDb(audit, "Audit Store", "Proposed local interface", "Local data container")
+}
+Rel(viewer, dashboard, "reads status — HTTP GET", "Proposed local contract", $tags="dashed")
+Rel(dashboard, telemetry, "reads projection — IReadProjection", "SQLite read-only", $tags="dashed")
+Rel(dashboard, audit, "reads audit view — IAuditRead", "local read API TBD", $tags="dashed")
+SHOW_LEGEND()
+@enduml

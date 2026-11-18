@@ -1,0 +1,39 @@
+@startuml
+!include <C4/C4_Component>
+skinparam componentStyle uml1
+title C4 Component Diagram — Decision & Policy Service
+LAYOUT_LEFT_RIGHT()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Container_Boundary(scope, "Decision & Policy Service") {
+  Component(C1, "Per-process Decision Orchestrator", "Python · policy workflow", "Builds LEAVE, recommendation, or bounded proposal from fresh context.")
+  Component(C2, "Telemetry Context Reader", "SQLite read adapter", "Reads current resource state and validated observation history.")
+  Component(C3, "Prediction Client", "Local service client", "Requests generic prediction output through the inference contract.")
+  Component(C4, "Policy Admission Guard", "Mode · allowlist · bounds", "Applies OBSERVE_ONLY defaults and independent CPU, RAM, and I/O gates.")
+  Component(C5, "Actuator Request Client", "Unix domain socket", "Sends only admitted, bounded actions; receives verified outcome.")
+  Component(C6, "Decision & Audit Writer", "SQLite projection · audit client", "Persists status/recommendation projections and decision evidence.")
+}
+Container_Ext(S1, "Resource Manager / Actuator", "Supporting service", "Directly connected container outside the scope")
+Container_Ext(S2, "Safety Watchdog", "Supporting service", "Directly connected container outside the scope")
+Container_Ext(S3, "Versioned policy configuration", "Supporting service", "Directly connected container outside the scope")
+ContainerDb_Ext(S4, "Telemetry Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+Container_Ext(S5, "AI Inference Service", "Supporting service", "Directly connected container outside the scope")
+ContainerDb_Ext(S6, "Telemetry & Read-Projection Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+ContainerDb_Ext(S7, "Audit Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+Rel(C1, C2, "ITelemetryContext", "Named local interface", $tags="dashed")
+Rel(C1, C3, "IInference", "Named local interface", $tags="dashed")
+Rel(C1, C4, "IAdmissionDecision", "Named local interface", $tags="dashed")
+Rel(C1, C5, "IActionRequest", "Named local interface", $tags="dashed")
+Rel(C1, C5, "IActionOutcome", "Named local interface", $tags="dashed")
+Rel(C5, S1, "IActuatorEndpoint", "Named local interface", $tags="dashed")
+Rel(C1, C6, "IAuditAppend", "Named local interface", $tags="dashed")
+Rel(S2, C1, "IPolicyInhibit", "Named local interface", $tags="dashed")
+Rel(C4, S3, "IPolicyRules", "Named local interface", $tags="dashed")
+Rel(C2, S4, "ITelemetryRead", "Named local interface", $tags="dashed")
+Rel(C3, S5, "IInferenceEndpoint", "Named local interface", $tags="dashed")
+Rel(C6, S6, "ITelemetryProjectionWrite", "Named local interface", $tags="dashed")
+Rel(C6, S7, "IAuditStoreWrite", "Named local interface", $tags="dashed")
+note bottom
+This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
+end note
+SHOW_LEGEND()
+@enduml

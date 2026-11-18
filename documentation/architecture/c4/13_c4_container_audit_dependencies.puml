@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+title C4 Container Diagram — Audit Dependencies
+LAYOUT_TOP_DOWN()
+AddRelTag("dashed", $lineStyle=DashedLine())
+System_Boundary(aios, "AIOS software system") {
+  Container(dashboard, "Read-only Dashboard API", "Python · FastAPI", "Serves status, recommendation, health, and audit projections. Human access is read-only.")
+  ContainerDb(audit, "Audit Store", "Proposed local interface", "Local data container")
+  Container(policy, "Decision & Policy Service", "Proposed Python service", "Builds per-process decisions; applies OBSERVE_ONLY defaults and independent resource gates.")
+  Container(watchdog, "Safety Watchdog", "Proposed Python service · systemd supervised", "Monitors health and freshness; inhibits writes and requests guarded recovery.")
+  Container(actuator, "Resource Manager / Actuator", "Python · Unix socket · SO_PEERCRED · cgroups v2", "Only proposed host writer; applies separately gated CPU, RAM, and supported I/O limits.")
+}
+Rel(dashboard, audit, "reads audit view — IAuditRead", "local read API TBD", $tags="dashed")
+Rel(policy, audit, "appends decision evidence — IAuditStoreWrite", "local append-only log", $tags="dashed")
+Rel(watchdog, audit, "appends safety event — IAuditStoreWrite", "local append-only log", $tags="dashed")
+Rel(actuator, audit, "appends action evidence — IAuditStoreWrite", "local append-only log", $tags="dashed")
+SHOW_LEGEND()
+@enduml

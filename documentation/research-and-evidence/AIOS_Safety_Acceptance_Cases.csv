@@ -1,0 +1,15 @@
+﻿Test ID,Scenario,Expected safe result,Status
+ST-01,Restart while default mode is OBSERVE_ONLY,No cgroup write; restart cannot enable control.,Not run — prototype needed
+ST-02,"Stale, missing, malformed or out-of-range sample/proposal",LEAVE/deny with reason; no OS write; no silent zero-fill.,Not run — thresholds/prototype needed
+ST-03,Unauthenticated Unix peer or malformed IPC,SO_PEERCRED/payload validation rejects request; audit denial.,Not run — UID policy/prototype needed
+ST-04,PID reused or process start time changes,Target identity mismatch rejects request.,Not run — prototype needed
+ST-05,Target moved outside approved cgroup,Actuator rechecks allowlist/ownership and denies.,Not run — allowlist/prototype needed
+ST-06,Dashboard POST/action/approval/mode/policy probe,No such route; dashboard has no actuator socket/write permission.,Not run — deployable UI needed
+ST-07,Prior value changed by host owner before rollback,Do not overwrite unowned value; fail closed and audit.,Not run — ownership policy needed
+ST-08,Watchdog heartbeat stale,Block new writes; safe restore only for verified AIOS-owned target.,Not run — timing/prototype needed
+ST-09,Rollback target disappears or becomes uncertain,No guessed target; degraded fallback; audit outcome.,Not run — prototype needed
+ST-10,SQLite/WAL cap or disk space reached,Expose degraded data state; stale/incomplete evidence cannot authorize control.,Not run — retention policy needed
+ST-11,"Audit chain altered, reordered, or truncated",Integrity check detects break; automated writes disabled pending review.,Not run — prototype/key policy needed
+ST-12,eBPF missing/denied; CPU mask unavailable,Explicit unavailable/denied status; no escalation; stay observe-only.,Not run — target host needed
+ST-13,Quota delays inference/watchdog or harms foreground,Fail resource gate; retain OBSERVE_ONLY/revert profile.,Not run — baseline/prototype needed
+ST-14,Service restart after degraded mode,Restart preserves explicit safe mode; no hidden enablement.,Not run — prototype needed

@@ -1,0 +1,30 @@
+---
+title: "UML-Style State Machine — AIOS Operating and Recovery Modes"
+---
+%% Proposed three-resource control with independent gates
+stateDiagram-v2
+  [*] --> Starting
+  Starting --> OBSERVE_ONLY: startup complete [required services healthy] / keep control disabled
+  Starting --> FALLBACK: [validation or required-service check fails]
+  OBSERVE_ONLY --> WARNING: [stale, uncertain, or pressure condition detected]
+  WARNING --> OBSERVE_ONLY: [freshness and health checks pass]
+  OBSERVE_ONLY --> RESOURCE_CONTROL: [host-local policy, resource capability, and safety gates pass]
+  RESOURCE_CONTROL --> OBSERVE_ONLY: [policy disables control or a health gate fails]
+  WARNING --> FALLBACK: [watchdog timeout or unsafe condition]
+  OBSERVE_ONLY --> FALLBACK: [unsafe input or watchdog failure]
+  RESOURCE_CONTROL --> FALLBACK: [IPC, actuator, or watchdog fault]
+  FALLBACK --> RECOVERY_CHECK: recovery begins after service restart
+  RECOVERY_CHECK --> OBSERVE_ONLY: [checks pass] / keep active control disabled
+  RECOVERY_CHECK --> FALLBACK: [any recovery check fails]
+  note right of RESOURCE_CONTROL
+    One bounded action per request: cpu.weight, memory.high, or supported io.weight / io.max.
+    Each resource has an independent capability and safety gate. memory.max and process termination are excluded.
+  end note
+  note right of FALLBACK
+    Block new AI writes. Restore a captured value only for a verified AIOS-owned target.
+    If safe rollback fails, stay fail-closed and report degraded mode.
+  end note
+  note left of OBSERVE_ONLY
+    Default mode. Viewers can read status only.
+    The dashboard cannot change mode or authorize actions.
+  end note

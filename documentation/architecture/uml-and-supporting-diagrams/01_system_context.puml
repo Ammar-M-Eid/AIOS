@@ -1,0 +1,15 @@
+@startuml
+title Operational Context — AIOS
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+actor "Sysadmin / SRE\nread-only viewer" as Admin
+rectangle "AIOS\nAutonomous Linux performance optimizer" as AIOS
+rectangle "Target workloads\nSelected Linux processes and cgroups" as Workloads
+rectangle "Ubuntu 24.04 Linux host\nprocfs / PSI / cgroups v2" as Host
+Admin --> AIOS : read-only dashboard status\nlocal HTTP GET
+AIOS --> Workloads : read selected process state\nprocfs / cgroups v2
+AIOS --> Host : request bounded resource controls\ncgroups v2
+Workloads --> Host : run on Ubuntu Linux
+@enduml

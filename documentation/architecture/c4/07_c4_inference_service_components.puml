@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+skinparam componentStyle uml1
+title C4 Component Diagram — AI Inference Service
+LAYOUT_LEFT_RIGHT()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Container_Boundary(scope, "AI Inference Service") {
+  Component(C1, "Inference Request Endpoint", "Proposed local Python service", "Accepts generic evidence-window requests and returns typed prediction output.")
+  Component(C2, "Evidence Window Reader", "SQLite read adapter", "Loads a bounded recent CPU, RAM, I/O, and pressure window.")
+  Component(C3, "Generic Inference Adapter", "Model/runtime boundary TBD", "Invokes the selected inference runtime without fixing model internals here.")
+  Component(C4, "Prediction Output Guard", "Schema and freshness validation", "Checks output shape, resource class, confidence metadata, and freshness.")
+}
+Container_Ext(S1, "Decision & Policy Prediction Client", "Supporting service", "Directly connected container outside the scope")
+ContainerDb_Ext(S2, "Telemetry Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+Container_Ext(S3, "Selected generic runtime boundary", "Supporting service", "Directly connected container outside the scope")
+Rel(S1, C1, "IInference", "Named local interface", $tags="dashed")
+Rel(C1, C2, "IEvidenceWindow", "Named local interface", $tags="dashed")
+Rel(C2, S2, "ITelemetryRead", "Named local interface", $tags="dashed")
+Rel(C1, C3, "IModelRuntime", "Named local interface", $tags="dashed")
+Rel(C1, C4, "IPredictionValidation", "Named local interface", $tags="dashed")
+Rel(C4, C3, "IGenericPredictionResult", "Named local interface", $tags="dashed")
+Rel(C3, S3, "IGenericInferenceRuntime", "Named local interface", $tags="dashed")
+note bottom
+This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
+end note
+SHOW_LEGEND()
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+title UC-14 Read-only dashboard interactions
+left to right direction
+actor "Sysadmin / SRE\n(read-only viewer)" as Viewer
+rectangle "AIOS read-only oversight boundary" {
+  usecase "UC-14\nReview status and outcomes (read-only)" as UC14
+  usecase "UC-17\nRead operational status and outcome projection" as UC17
+  usecase "UC-18\nRead audit summary and verification status" as UC18
+  usecase "UC-04\nPersist bounded telemetry" as UC04
+  usecase "UC-13\nAppend and verify audit history" as UC13
+}
+Viewer -- UC14
+UC14 ..> UC17 : <<include>>
+UC14 ..> UC18 : <<include>>
+UC17 ..> UC04 : <<read-model source>>
+UC18 ..> UC13 : <<audit-summary source>>
+@enduml

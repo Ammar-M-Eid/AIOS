@@ -1,0 +1,32 @@
+@startuml
+title AIOS Runtime Architecture — Responsibility Overview
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+left to right direction
+actor "Sysadmin / SRE" as Admin
+rectangle "Telemetry Collector\nCPU / RAM / I/O / PSI sampling" as Collector
+database "Telemetry & Read-Projection Store\nSQLite" as Telemetry
+rectangle "AI Inference Service\nmodel boundary TBD" as Inference
+rectangle "Decision & Policy Service\nper-resource safety gates" as Policy
+rectangle "Resource Manager / Actuator\nonly proposed host writer" as Actuator
+rectangle "Safety Watchdog\ninhibit and guarded recovery" as Watchdog
+database "Audit Store\nseparate append-only SQLite" as Audit
+rectangle "Read-only Dashboard API" as Dashboard
+rectangle "Ubuntu Linux host\nprocfs / PSI / cgroups v2" as Host
+Collector --> Telemetry : stores accepted samples
+Telemetry --> Inference : bounded evidence
+Policy --> Inference : prediction request
+Policy --> Telemetry : process context / read-model write
+Policy --> Actuator : authenticated action request
+Watchdog --> Policy : inhibit proposals
+Watchdog --> Actuator : guarded recovery request
+Actuator --> Host : bounded resource control / read-back
+Collector --> Host : read-only observations
+Policy --> Audit : append decision evidence
+Actuator --> Audit : append action evidence
+Watchdog --> Audit : append health / recovery evidence
+Dashboard --> Telemetry : read-only projection
+Dashboard --> Audit : read-only audit summary
+Admin --> Dashboard : local HTTP GET
+@enduml

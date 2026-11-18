@@ -1,0 +1,26 @@
+---
+title: "UML Class Model — Read-Only Dashboard Query Boundary"
+---
+classDiagram
+direction LR
+
+class FastAPIReadOnlyAdapter
+class DashboardQueryPort
+class DashboardQueryService
+class DashboardReadPort
+class AuditReadPort
+class SQLiteDashboardProjectionAdapter
+class AuditReadProjectionAdapter
+
+<<interface>> DashboardQueryPort
+<<interface>> DashboardReadPort
+<<interface>> AuditReadPort
+
+FastAPIReadOnlyAdapter ..> DashboardQueryPort : invokes read-only query
+DashboardQueryService ..|> DashboardQueryPort
+DashboardQueryService ..> DashboardReadPort
+DashboardQueryService ..> AuditReadPort
+SQLiteDashboardProjectionAdapter ..|> DashboardReadPort
+AuditReadProjectionAdapter ..|> AuditReadPort
+
+note for FastAPIReadOnlyAdapter "No command, approval, policy, actuator-socket, or cgroup-control operation is exposed."

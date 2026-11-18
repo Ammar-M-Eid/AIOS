@@ -1,0 +1,32 @@
+---
+title: "Action Catalog — Independent CPU, RAM, I/O Gates and Watchdog Recovery"
+---
+%% Action catalog separates recommendations, independently gated changes, and rollback
+flowchart TB
+  PROP["Per-process proposal\nmodel output is advisory"] --> G1["Policy gate\nknown target, eligibility, freshness, cooldown"] --> MODE{"Mode?"}
+  MODE -- "OBSERVE_ONLY default" --> REC["Store recommendation in SQLite projection\ndashboard reads only"]
+  MODE -- "Host-local reviewed config permits" --> IPC{{"Unix socket\nSO_PEERCRED at actuator"}} --> G3["Actuator guard\npeer + whitelist + identity + bounds"] --> SAFE{"Request and target still safe?"}
+  SAFE -- "No" --> DENY["LEAVE / deny\naudit reason"]
+  SAFE -- "Yes" --> KIND{"Request class?"}
+  KIND -- "CPU proposal" --> CPU_GATE{"CPU capability, target, and bounds pass?"}
+  CPU_GATE -- "Yes" --> CPU["Capture prior value\nbounded cpu.weight on approved cgroup"]
+  CPU_GATE -- "No" --> DENY
+  KIND -- "RAM proposal" --> RAM_GATE{"RAM capability, target, and bounds pass?"}
+  RAM_GATE -- "Yes" --> MEM["Capture prior value\nbounded memory.high"]
+  RAM_GATE -- "No" --> DENY
+  KIND -- "Supported I/O proposal" --> IO_GATE{"I/O controller, device, target, and bounds pass?"}
+  IO_GATE -- "Yes" --> IO["Capture per-device prior values\nbounded io.weight / io.max"]
+  IO_GATE -- "No" --> DENY
+  KIND -- "Unsupported / unapproved" --> ADVISORY["Recommendation only\nno write; no memory.max / process kill"]
+  CPU --> APPLY["Fixed resource adapter\nno arbitrary shell commands"] --> VERIFY["Verify result; record outcome"]
+  MEM --> APPLY
+  IO --> APPLY
+  ADVISORY --> REC
+  REC --> DECLOG["Append decision / recommendation event"]
+  DENY --> DECLOG
+  VERIFY --> DECLOG
+  WD["Watchdog detects stale / unsafe state"] --> OFF["Block all new AI proposals"] --> RIPC{{"Same Unix domain socket\nactuator authenticates watchdog with SO_PEERCRED"}} --> RGUARD["Actuator verifies rollback class, target, and captured baseline"] --> RSAFE{"Target and baseline still verified?"}
+  RSAFE -- "Yes" --> RB["Restore captured CPU, RAM, or I/O value"] --> RVERIFY["Verify restore; append fallback outcome"]
+  RSAFE -- "No" --> RSTOP["Fail closed; no write; append reason"]
+  USER["Human viewer"] -. "read-only projection" .-> REC
+  NOTE["The dashboard cannot approve, trigger, or configure this action path. Dashed link marks read-only viewer context."] -.-> G1

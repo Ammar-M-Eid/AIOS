@@ -1,0 +1,53 @@
+﻿Requirement_ID,Requirement_Name,Use_Case_IDs,User_Story_IDs,Sequence_Diagram_IDs
+1.1.1,Host and Process CPU Telemetry,UC-02,US-02,SEQ-02
+1.1.2,Host and Process Memory Telemetry,UC-02,US-02,SEQ-02
+1.1.3,Host and Process I/O Telemetry,UC-02,US-02,SEQ-02
+1.1.4,Pressure Stall Information Collection,UC-02,US-02,SEQ-02
+1.1.5,Opt-In eBPF Collection,UC-02,US-02,SEQ-02
+1.1.6,Dual-Clock Sample Ordering,UC-02,US-02,SEQ-02
+1.2.1,Stable Process Instance Identity,UC-03,US-03,SEQ-02
+1.2.2,Observation Quality Validation,UC-03,US-03,SEQ-02
+1.2.3,Explicit Data Availability States,UC-03,US-03,SEQ-02
+1.2.4,Invalid Delta and Identity Rejection,UC-03,US-03,SEQ-02
+1.3.1,Bounded Local Telemetry Persistence,UC-04,US-04,SEQ-02
+1.3.2,Database and WAL Size Limits,UC-04,US-04,SEQ-02
+1.3.3,Read-Only Dashboard Data Path,UC-04; UC-14; UC-17,US-04,SEQ-08
+1.4.1,Model-Agnostic Inference Contract,UC-05,US-05,SEQ-03
+1.4.2,Prediction Window and Quality Provenance,UC-05,US-05,SEQ-03
+1.4.3,Inference Without Privileged Writes,UC-05,US-05,SEQ-03
+1.5.1,Per-Process Decision Outcome,UC-06,US-06,SEQ-03
+1.5.2,Policy Admission Guard,UC-07,US-06,SEQ-03
+1.5.3,Safe OBSERVE_ONLY Startup,UC-07,US-07,SEQ-01
+1.5.4,Resource-Specific Bounded Controls,UC-07; UC-09; UC-10; UC-11,US-07; US-09; US-10; US-11,SEQ-03;SEQ-04;SEQ-05;SEQ-06
+1.5.5,Prohibited and Unsupported Action Denial,UC-06; UC-07; UC-10; UC-11,US-07; US-10; US-11,SEQ-03
+1.6.1,Local Actuator IPC,UC-08,US-08,SEQ-04;SEQ-05;SEQ-06
+1.6.2,Peer Credential Authentication,UC-08,US-08,SEQ-04;SEQ-05;SEQ-06
+1.6.3,Pre-Write Target and Policy Revalidation,UC-08,US-08,SEQ-04;SEQ-05;SEQ-06
+1.6.4,Capture Apply and Verify Control,UC-09; UC-10; UC-11,US-09; US-10; US-11,SEQ-04;SEQ-05;SEQ-06
+1.6.5,Guarded Write-Failure Restoration,UC-09; UC-10; UC-11,US-09; US-10; US-11,SEQ-04;SEQ-05;SEQ-06
+1.7.1,Correlated Security and Action Audit,UC-13; UC-18,US-13,SEQ-04;SEQ-05;SEQ-06;SEQ-07
+1.7.2,Tamper-Evident Audit Chain,UC-13; UC-18,US-13,SEQ-07
+1.7.3,Independent Safety Watchdog,UC-12,US-12,SEQ-07
+1.7.4,Fail-Closed Watchdog Response,UC-12,US-12,SEQ-07
+1.7.5,Identity-Checked Fallback Restoration,UC-11; UC-12,US-11; US-12,SEQ-07
+1.8.1,Read-Only Operational Projection,UC-14; UC-17; UC-18,US-14,SEQ-08
+1.8.2,No Dashboard Control Surface,UC-14,US-14,SEQ-08
+1.8.3,Visible Telemetry Quality States,UC-14; UC-17,US-14,SEQ-08
+1.9.1,systemd Lifecycle Supervision,UC-01,US-01,SEQ-01
+1.9.2,Optional CPU Affinity Profile,UC-01,US-19,SEQ-01
+1.9.3,Optional AIOS CPU Quota Profile,UC-01,US-19,SEQ-01
+1.9.4,Explicit Host Prerequisite Reporting,UC-01,US-01,SEQ-01
+2.1.1,Least-Privilege Actuator Permissions,UC-08; UC-16,US-08; US-15,SEQ-04;SEQ-05;SEQ-06
+2.1.2,Process and Interface Separation,UC-08; UC-16,US-08; US-15,SEQ-04;SEQ-05;SEQ-06
+2.1.3,Audit Integrity Actuation Lockout,UC-13; UC-18,US-13,SEQ-07
+2.2.1,Fail-Safe Deny on Invalid Evidence,UC-03; UC-07,US-03; US-07,SEQ-02;SEQ-03
+2.2.2,Preserve Linux Native Control,UC-12,US-12; US-19,SEQ-07
+2.2.3,Safe Restart Requires Valid Configuration,UC-01,US-01; US-07,SEQ-01
+2.3.1,Runtime Cost and Workload Evaluation,UC-15,US-16,SEQ-02;SEQ-03
+2.3.2,Thresholds Based on Host Measurement,UC-15,US-16,SEQ-01;SEQ-03
+2.4.1,Privacy-Preserving Telemetry Defaults,UC-14; UC-16; UC-17; UC-18,US-15,SEQ-08
+2.5.1,Capability-Aware Compatibility,UC-01,US-01,SEQ-01
+2.6.1,Clear Outcome Presentation,UC-14; UC-17; UC-18,US-14,SEQ-08
+2.7.1,Reviewable Responsibility Boundaries,UC-16,US-17,SEQ-03
+2.8.1,Requirement Verification and Evidence Status,UC-16,US-17,SEQ-03
+2.8.2,Separate Technical Evidence from Demand Evidence,UC-15; UC-16,US-18,SEQ-03

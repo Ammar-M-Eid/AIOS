@@ -1,0 +1,25 @@
+%% SEQ-03: Inference, decision, and policy admission
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    participant Q as Validated Window
+    participant INF as Generic Inference Adapter
+    participant DEC as Per-process Decision Service
+    participant POL as Safety and Resource Policy
+    participant AUD as Append-only Audit DB
+    participant ACT as Actuator
+    Q->>INF: Approved observations plus time/quality context
+    INF-->>DEC: Prediction tied to source window
+    Note over INF: No OS write permission or direct actuator call
+    DEC->>DEC: Evaluate each eligible process/window
+    alt No justified proposal
+        DEC->>AUD: Record LEAVE with reason and correlation ID
+    else Proposal available
+        DEC->>POL: Submit single-resource bounded proposal
+        POL->>POL: Check mode, allowlist, freshness, bounds, cooldown and capability
+        alt OBSERVE_ONLY or guard denied
+            POL->>AUD: Record denial/recommendation and reason
+        else Admitted
+            POL->>ACT: Send over local Unix socket
+        end
+    end

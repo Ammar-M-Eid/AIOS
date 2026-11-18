@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+skinparam componentStyle uml1
+title C4 Component Diagram — Read-only Dashboard API
+LAYOUT_LEFT_RIGHT()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Container_Boundary(scope, "Read-only Dashboard API") {
+  Component(C1, "Read-only HTTP Routes", "FastAPI", "Serves status, recommendations, safety health, and audit views only.")
+  Component(C2, "Projection Query Service", "Read-only SQLite queries", "Reads approved telemetry, status, recommendation, and audit projections.")
+  Component(C3, "Read-model Mapper", "Response DTO mapping", "Maps stored projections into stable presentation records.")
+  Component(C4, "Response Safety Filter", "Output validation", "Filters unsafe, stale, or unsupported fields before response.")
+}
+Person(S1, "Human Viewer", "Read-only client of the dashboard")
+ContainerDb_Ext(S2, "Telemetry & Read-Projection Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+ContainerDb_Ext(S3, "Audit Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+Rel(S1, C1, "IDashboardRead", "Named local interface", $tags="dashed")
+Rel(C3, C2, "IReadModel", "Named local interface", $tags="dashed")
+Rel(C1, C3, "IResponseDTO", "Named local interface", $tags="dashed")
+Rel(C4, C3, "IResponseDTO", "Named local interface", $tags="dashed")
+Rel(C1, C4, "IResponseSafety", "Named local interface", $tags="dashed")
+Rel(C2, S2, "ITelemetryRead", "Named local interface", $tags="dashed")
+Rel(C2, S3, "IAuditRead", "Named local interface", $tags="dashed")
+note bottom
+This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
+end note
+SHOW_LEGEND()
+@enduml

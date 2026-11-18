@@ -1,0 +1,48 @@
+---
+title: "UML Class Model — Application Ports, Services, and Adapters"
+---
+classDiagram
+direction LR
+
+class TelemetryCollector
+class InputValidator
+class DecisionService
+class PolicyGate
+class ActuatorService
+class Watchdog
+
+class TelemetrySourcePort
+class TelemetryWritePort
+class TelemetryWindowReadPort
+class InferencePort
+class PolicyStrategy
+class ActuationRequestPort
+class ResourceControlPort
+class AuditAppendPort
+class HashChainedAuditAdapter
+
+<<interface>> TelemetrySourcePort
+<<interface>> TelemetryWritePort
+<<interface>> TelemetryWindowReadPort
+<<interface>> InferencePort
+<<interface>> PolicyStrategy
+<<interface>> ActuationRequestPort
+<<interface>> ResourceControlPort
+<<interface>> AuditAppendPort
+
+TelemetryCollector ..> TelemetrySourcePort
+TelemetryCollector ..> InputValidator : delegates validation
+TelemetryCollector ..> TelemetryWritePort
+TelemetryCollector ..> AuditAppendPort
+DecisionService ..> TelemetryWindowReadPort
+DecisionService ..> InferencePort
+DecisionService ..> AuditAppendPort
+PolicyGate ..> PolicyStrategy
+PolicyGate ..> ActuationRequestPort
+PolicyGate ..> AuditAppendPort
+ActuatorService ..|> ActuationRequestPort
+ActuatorService ..> ResourceControlPort
+ActuatorService ..> AuditAppendPort
+Watchdog ..> ActuationRequestPort
+Watchdog ..> AuditAppendPort
+HashChainedAuditAdapter ..|> AuditAppendPort

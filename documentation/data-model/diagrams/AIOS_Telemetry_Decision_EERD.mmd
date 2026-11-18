@@ -1,0 +1,89 @@
+---
+title: AIOS Telemetry and Decision Store — EERD (proposed)
+---
+erDiagram
+    direction LR
+
+    COLLECTION_RUN ||--o{ HOST_SAMPLE : captures
+    HOST_SAMPLE ||--o{ PROCESS_SAMPLE : contains
+    COLLECTION_RUN ||--o{ PREDICTION_OUTPUT : records
+    COLLECTION_RUN ||--o{ POLICY_DECISION : scopes
+    PREDICTION_OUTPUT o|--o{ POLICY_DECISION : may_inform
+    POLICY_DECISION ||--o| RECOMMENDATION_PROJECTION : may_publish
+    POLICY_DECISION ||--o{ ACTION_ATTEMPT : may_authorize
+    ACTION_ATTEMPT ||--o{ ACTION_GATE_CHECK : requires
+
+    COLLECTION_RUN {
+        text run_id PK
+        text host_alias
+        text boot_id
+        text started_at_utc
+        text run_status
+    }
+    HOST_SAMPLE {
+        int host_sample_id PK
+        text run_id FK
+        text captured_at_utc
+        int monotonic_ns
+        real cpu_pct
+        int memory_total_bytes
+        real io_psi_some_avg10
+        int disk_read_bytes
+        int disk_write_bytes
+    }
+    PROCESS_SAMPLE {
+        int process_sample_id PK
+        int host_sample_id FK
+        int pid
+        real process_start_time_epoch_s
+        real cpu_pct
+        int rss_bytes
+        int vms_bytes
+        int io_read_bytes
+        int io_write_bytes
+        text quality_json
+    }
+    PREDICTION_OUTPUT {
+        text prediction_id PK
+        text run_id FK
+        text target_scope
+        text resource_kind
+        int input_window_start_monotonic_ns
+        int input_window_end_monotonic_ns
+        text output_payload_json
+    }
+    POLICY_DECISION {
+        text decision_id PK
+        text run_id FK
+        text prediction_id FK
+        text correlation_id
+        text resource_kind
+        text outcome
+    }
+    RECOMMENDATION_PROJECTION {
+        text recommendation_id PK
+        text decision_id FK
+        text projection_status
+        text expires_at_utc
+        text display_payload_json
+    }
+    ACTION_ATTEMPT {
+        text action_attempt_id PK
+        text decision_id FK
+        text resource_kind
+        text control_name
+        text target_ref
+        text previous_value
+        text requested_value
+        text readback_value
+        int device_major
+        int device_minor
+        text attempt_status
+    }
+    ACTION_GATE_CHECK {
+        int gate_check_id PK
+        text action_attempt_id FK
+        text gate_name
+        text gate_result
+        text checked_at_utc
+    }

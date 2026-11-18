@@ -1,0 +1,28 @@
+%% SEQ-06: Device-aware I/O guarded actuation
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    participant POL as Policy Service
+    participant ACT as Resource Manager / Actuator
+    participant K as cgroups v2 I/O
+    participant AUD as Audit DB
+    POL->>ACT: Bounded request with cgroup and device identity
+    ACT->>ACT: Authenticate, revalidate target, bounds, mode and ownership
+    ACT->>K: Check controller and device capability
+    alt Unsupported device/controller or failed guard
+        ACT->>AUD: Deny, retain recommendation, no write
+    else Supported and authorized
+        ACT->>K: Read prior io.weight/io.max for exact device
+        K-->>ACT: Device-scoped prior value
+        ACT->>K: Apply bounded device-specific value
+        ACT->>K: Read back the same device control
+        alt Verified
+            ACT->>AUD: Record device, old/new values and outcome
+        else Failure
+            ACT->>ACT: Recheck cgroup, device identity and ownership
+            opt All checks still match
+                ACT->>K: Restore prior value for same device and verify
+            end
+            ACT->>AUD: Record failure and guarded recovery
+        end
+    end

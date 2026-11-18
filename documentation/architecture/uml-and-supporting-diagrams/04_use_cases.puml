@@ -1,0 +1,36 @@
+@startuml
+title AIOS Use Cases — autonomous operation with read-only oversight
+left to right direction
+actor "Sysadmin / SRE\n(read-only viewer)" as Viewer
+rectangle "AIOS proposed autonomous optimizer" {
+  usecase "UC-01\nCheck host readiness and capabilities" as UC01
+  usecase "UC-02\nCollect CPU, RAM, I/O and PSI observations" as UC02
+  usecase "UC-03\nValidate sample quality and process identity" as UC03
+  usecase "UC-04\nPersist bounded telemetry" as UC04
+  usecase "UC-05\nGenerate provenance-bound prediction" as UC05
+  usecase "UC-06\nDecide per-process outcome" as UC06
+  usecase "UC-07\nApply policy admission gates" as UC07
+  usecase "UC-08\nAuthenticate and revalidate actuator request" as UC08
+  usecase "UC-09\nApply guarded CPU control" as UC09
+  usecase "UC-10\nApply guarded RAM control" as UC10
+  usecase "UC-11\nApply guarded device-specific I/O control" as UC11
+  usecase "UC-12\nInhibit and recover on unsafe runtime" as UC12
+  usecase "UC-16\nReview least privilege and evidence status" as UC16
+  usecase "UC-14\nReview status and outcomes (read-only)" as UC14
+  usecase "UC-15\nMeasure overhead and workload impact" as UC15
+  usecase "UC-13\nAppend and verify audit history" as UC13
+  usecase "UC-17\nRead operational status and outcome projection" as UC17
+  usecase "UC-18\nRead audit summary and verification status" as UC18
+}
+Viewer -- UC14
+UC02 ..> UC03 : <<include>>
+UC04 ..> UC03 : <<extend>>\n[accepted sample]
+UC07 ..> UC06 : <<extend>>\n[proposal available]
+UC08 ..> UC07 : <<extend>>\n[policy admits proposal]
+UC09 ..> UC08 : <<include>>
+UC10 ..> UC08 : <<include>>
+UC11 ..> UC08 : <<include>>
+UC12 ..> UC13 : <<include>>
+UC14 ..> UC17 : <<include>>
+UC14 ..> UC18 : <<include>>
+@enduml

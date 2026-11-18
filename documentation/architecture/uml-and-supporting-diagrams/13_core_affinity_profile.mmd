@@ -1,0 +1,18 @@
+---
+title: "Optional CPU Affinity and Quota Experiment — Decision Flow"
+---
+%% Optional CPU placement comparison; profiles are evaluated against the same safety gates
+flowchart LR
+  A["A · Baseline\nUnpinned, no quota"] --> T["Measure AIOS CPU, sample freshness, heartbeat\nand foreground p95 under matched workload"]
+  B["B · Affinity\nCPUAffinity= / AllowedCPUs="] --> T
+  C["C · Fractional CPU cap\nAffinity + CPUQuota=20% example"] --> T
+  H["Inspect online logical CPUs\nphysical-core / SMT topology"] -->|"select host-local CPU set"| B
+  H -->|"select host-local CPU set"| C
+  T --> Q{"Safety or budget gate fails?"}
+  Q -- Yes --> R["Keep OBSERVE_ONLY\nremove or widen profile"]
+  Q -- No --> S["Review measured profile\nbefore considering bounded control"]
+  D["D · Isolated physical core\nseparate later research + host review"] -. "not a first-prototype step" .-> Q
+  N["Affinity restricts eligible CPUs; CPUQuota caps CPU time. Neither reserves a core or guarantees execution."]
+  N -. "interpret measurements" .-> T
+  SAFE["Keep watchdog, policy, and actuator responsive; exclude them from an unvalidated tight quota."]
+  SAFE -. "safety gate" .-> Q

@@ -1,0 +1,29 @@
+%% SEQ-04: CPU guarded actuation
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    participant POL as Policy Service
+    participant IPC as Unix Domain Socket
+    participant ACT as Resource Manager / Actuator
+    participant K as cgroups v2 CPU
+    participant AUD as Audit DB
+    POL->>IPC: Bounded cpu.weight request and correlation ID
+    IPC->>ACT: Deliver request
+    ACT->>ACT: Verify SO_PEERCRED and revalidate mode/target/identity/bounds
+    alt Authentication or target check fails
+        ACT->>AUD: Deny with no OS write
+    else Guard passes
+        ACT->>K: Read prior cpu.weight
+        K-->>ACT: Prior value and target identity
+        ACT->>K: Write bounded value to approved cgroup
+        ACT->>K: Read back effective value
+        alt Verified
+            ACT->>AUD: Record old/new value and outcome
+        else Write/readback fails
+            ACT->>ACT: Recheck identity and AIOS ownership
+            opt Target still verified
+                ACT->>K: Restore captured prior value and verify
+            end
+            ACT->>AUD: Record failure and guarded recovery
+        end
+    end

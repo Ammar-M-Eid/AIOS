@@ -1,0 +1,33 @@
+@startuml
+!include <C4/C4_Component>
+skinparam componentStyle uml1
+title C4 Component Diagram — Safety Watchdog
+LAYOUT_LEFT_RIGHT()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Container_Boundary(scope, "Safety Watchdog") {
+  Component(C1, "Health & Freshness Monitor", "Timers · systemd state · timestamps", "Monitors service state and telemetry freshness before recovery or inhibition.")
+  Component(C2, "Safety State Evaluator", "Explicit state rules", "Evaluates safe, degraded, inhibited, and recovery states.")
+  Component(C3, "Proposal Inhibit Client", "Policy boundary · contract TBD", "Requests that policy stop new writes while health is unsafe or stale.")
+  Component(C4, "Guarded Recovery Client", "Unix domain socket", "Requests recovery through the same authenticated actuator gates.")
+  Component(C5, "Watchdog Event Publisher", "Audit store client", "Records state transitions, inhibition, and recovery outcomes.")
+}
+Container_Ext(S1, "Decision & Policy Service", "Supporting service", "Directly connected container outside the scope")
+Container_Ext(S2, "Resource Manager / Actuator", "Supporting service", "Directly connected container outside the scope")
+ContainerDb_Ext(S3, "Audit Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+Container_Ext(S4, "systemd service manager", "Supporting service", "Directly connected container outside the scope")
+ContainerDb_Ext(S5, "Telemetry & Read-Projection Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+Rel(C2, C1, "IHealthSnapshot", "Named local interface", $tags="dashed")
+Rel(C3, C2, "ISafetyState", "Named local interface", $tags="dashed")
+Rel(C4, C2, "ISafetyState", "Named local interface", $tags="dashed")
+Rel(C3, S1, "IPolicyInhibit", "Named local interface", $tags="dashed")
+Rel(C4, S2, "IActionRequest", "Named local interface", $tags="dashed")
+Rel(C4, S2, "IActionOutcome", "Named local interface", $tags="dashed")
+Rel(C5, C2, "ISafetyState", "Named local interface", $tags="dashed")
+Rel(C5, S3, "IAuditStoreWrite", "Named local interface", $tags="dashed")
+Rel(C1, S4, "IServiceHealth", "Named local interface", $tags="dashed")
+Rel(C1, S5, "IObservationFreshness", "Named local interface", $tags="dashed")
+note bottom
+This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
+end note
+SHOW_LEGEND()
+@enduml

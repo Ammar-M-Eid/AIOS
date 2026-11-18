@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Container>
+title C4 Container Diagram — AIOS Host-local Runtime
+LAYOUT_TOP_DOWN()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Person(viewer, "Human Viewer", "Read-only dashboard access")
+System_Ext(host, "Ubuntu 24.04 host", "procfs · PSI · cgroups v2")
+System_Boundary(aios, "AIOS software system") {
+  Container(dashboard, "Read-only Dashboard API", "Python · FastAPI", "Serves status, recommendation, health, and audit projections. Human access is read-only.")
+  ContainerDb(telemetry, "Telemetry & Read-Projection Store", "Proposed local interface", "Local data container")
+  Container(collector, "Telemetry Collector", "Python · psutil · procfs/PSI · optional eBPF", "Read-only CPU, RAM, I/O, and pressure collection with sample validation.")
+  Container(inference, "AI Inference Service", "Proposed generic service boundary", "Reads a bounded evidence window and returns validated generic predictions.")
+  Container(policy, "Decision & Policy Service", "Proposed Python service", "Builds per-process decisions; applies OBSERVE_ONLY defaults and independent resource gates.")
+  Container(actuator, "Resource Manager / Actuator", "Python · Unix socket · SO_PEERCRED · cgroups v2", "Only proposed host writer; applies separately gated CPU, RAM, and supported I/O limits.")
+}
+Rel(viewer, dashboard, "reads status — HTTP GET", "Proposed local contract", $tags="dashed")
+Rel(dashboard, telemetry, "reads projection — IReadProjection", "SQLite read-only", $tags="dashed")
+Rel(collector, telemetry, "stores samples — SQLite", "Proposed local contract", $tags="dashed")
+Rel(collector, host, "reads PSI metrics — procfs / PSI", "Proposed local contract", $tags="dashed")
+Rel(inference, telemetry, "reads evidence — SQLite", "Proposed local contract", $tags="dashed")
+Rel(policy, telemetry, "reads process context — ITelemetryContext", "SQLite", $tags="dashed")
+Rel(policy, inference, "requests prediction — local IPC TBD", "Proposed local contract", $tags="dashed")
+Rel(policy, actuator, "submits action — authenticated Unix socket", "Proposed local contract", $tags="dashed")
+Rel(actuator, host, "controls limits — cgroups v2", "Proposed local contract", $tags="dashed")
+SHOW_LEGEND()
+@enduml

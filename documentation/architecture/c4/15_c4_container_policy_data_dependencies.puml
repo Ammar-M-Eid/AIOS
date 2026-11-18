@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+title C4 Container Diagram — Policy and Telemetry Dependencies
+LAYOUT_TOP_DOWN()
+AddRelTag("dashed", $lineStyle=DashedLine())
+System_Boundary(aios, "AIOS software system") {
+  Container(policy, "Decision & Policy Service", "Proposed Python service", "Builds per-process decisions; applies OBSERVE_ONLY defaults and independent resource gates.")
+  ContainerDb(telemetry, "Telemetry & Read-Projection Store", "Proposed local interface", "Local data container")
+  Container(watchdog, "Safety Watchdog", "Proposed Python service · systemd supervised", "Monitors health and freshness; inhibits writes and requests guarded recovery.")
+}
+Rel(policy, telemetry, "reads process context — ITelemetryContext", "SQLite", $tags="dashed")
+Rel(policy, telemetry, "writes read model — ITelemetryProjectionWrite", "SQLite", $tags="dashed")
+Rel(watchdog, telemetry, "checks freshness — IObservationFreshness", "local store read", $tags="dashed")
+SHOW_LEGEND()
+@enduml

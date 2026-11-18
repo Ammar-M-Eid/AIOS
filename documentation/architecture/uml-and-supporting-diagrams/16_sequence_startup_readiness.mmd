@@ -1,0 +1,24 @@
+%% SEQ-01: Startup and capability readiness
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    participant SD as systemd
+    participant RT as Runtime Supervisor
+    participant CFG as Reviewed Host Profile
+    participant PROBE as Linux Capability Probe
+    participant POL as Policy Gate
+    participant DB as Local State DB
+    SD->>RT: Start services
+    RT->>CFG: Load reviewed configuration
+    CFG-->>RT: Valid, invalid, or missing profile
+    RT->>PROBE: Probe Ubuntu, kernel, cgroup v2, PSI and optional eBPF
+    PROBE-->>RT: Per-feature capability status
+    RT->>POL: Initialize mode and safety health
+    alt Valid configuration and required checks pass
+        POL-->>RT: OBSERVE_ONLY at startup/restart
+        RT->>DB: Record readiness and capability report
+    else Invalid profile or failed safety health
+        POL-->>RT: Fail closed and disable unsupported/control features
+        RT->>DB: Record degraded state and reason
+    end
+    RT-->>SD: Publish service health

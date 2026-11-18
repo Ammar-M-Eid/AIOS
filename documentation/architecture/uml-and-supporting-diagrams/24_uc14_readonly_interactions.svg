@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1040" viewBox="0 0 1800 1040">
+<rect width="100%" height="100%" fill="#fff"/>
+<defs><marker id="open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1 1 L12 6 L1 11" fill="none" stroke="#435466" stroke-width="1.7"/></marker></defs>
+<text x="900" y="48" text-anchor="middle" font-family="Arial" font-size="29" font-weight="700" fill="#103a5c">UC-14 — Read-only Dashboard Interactions</text>
+<rect x="230" y="90" width="1510" height="800" rx="10" fill="#f8fbff" stroke="#2471a3" stroke-width="4"/>
+<text x="985" y="132" text-anchor="middle" font-family="Arial" font-size="23" font-weight="700" fill="#103a5c">AIOS read-only oversight boundary</text>
+<path d="M907 317 L643 478" fill="none" stroke="#435466" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#open)"/>
+<rect x="752.5" y="388" width="105" height="21" fill="#f8fbff"/><text x="805" y="405" text-anchor="middle" font-family="Arial" font-size="15" fill="#34495e">«include»</text>
+<path d="M1093 317 L1357 478" fill="none" stroke="#435466" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#open)"/>
+<rect x="1197.5" y="388" width="105" height="21" fill="#f8fbff"/><text x="1250" y="405" text-anchor="middle" font-family="Arial" font-size="15" fill="#34495e">«include»</text>
+<path d="M550 600 L550 715" fill="none" stroke="#435466" stroke-width="2.5" stroke-dasharray="3 6" marker-end="url(#open)"/>
+<rect x="582.0" y="634" width="136" height="21" fill="#f8fbff"/><text x="650" y="651" text-anchor="middle" font-family="Arial" font-size="15" fill="#34495e">«read-model source»</text>
+<path d="M1450 600 L1450 715" fill="none" stroke="#435466" stroke-width="2.5" stroke-dasharray="3 6" marker-end="url(#open)"/>
+<rect x="1460.0" y="634" width="160" height="21" fill="#f8fbff"/><text x="1540" y="651" text-anchor="middle" font-family="Arial" font-size="15" fill="#34495e">«audit-summary source»</text>
+<circle cx="115" cy="245" r="24" fill="none" stroke="#273746" stroke-width="5"/>
+<path d="M115 269 L115 325 M77 288 L153 288 M115 325 L81 365 M115 325 L149 365" fill="none" stroke="#273746" stroke-width="5"/>
+<text x="115" y="400" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#273746">Sysadmin / SRE</text>
+<text x="115" y="426" text-anchor="middle" font-family="Arial" font-size="15" fill="#52606d">read-only viewer</text>
+<path d="M153 288 L210 288 L210 260 L810 260" fill="none" stroke="#485563" stroke-width="2.6"/>
+<ellipse cx="1000" cy="260" rx="190" ry="65" fill="#e9f6ee" stroke="#27834a" stroke-width="3"/>
+<text x="1000" y="240" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#103a5c">UC-14</text>
+<text x="1000" y="267" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">Review status and outcomes</text>
+<text x="1000" y="288" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">(read-only)</text>
+<ellipse cx="550" cy="535" rx="190" ry="65" fill="#f2effb" stroke="#7454a6" stroke-width="3"/>
+<text x="550" y="515" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#103a5c">UC-17</text>
+<text x="550" y="542" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">Read operational status and</text>
+<text x="550" y="563" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">outcome projection</text>
+<ellipse cx="1450" cy="535" rx="190" ry="65" fill="#f2effb" stroke="#7454a6" stroke-width="3"/>
+<text x="1450" y="515" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#103a5c">UC-18</text>
+<text x="1450" y="542" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">Read audit summary and</text>
+<text x="1450" y="563" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">verification status</text>
+<ellipse cx="550" cy="780" rx="190" ry="65" fill="#eef5fb" stroke="#2471a3" stroke-width="3"/>
+<text x="550" y="760" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#103a5c">UC-04</text>
+<text x="550" y="787" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">Persist bounded telemetry</text>
+<ellipse cx="1450" cy="780" rx="190" ry="65" fill="#eef5fb" stroke="#2471a3" stroke-width="3"/>
+<text x="1450" y="760" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#103a5c">UC-13</text>
+<text x="1450" y="787" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">Append and verify audit</text>
+<text x="1450" y="808" text-anchor="middle" font-family="Arial" font-size="16" fill="#243b53">history</text>
+<line x1="950" y1="950" x2="1000" y2="950" stroke="#435466" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#open)"/><text x="1010" y="955" font-family="Arial" font-size="14" fill="#52606d">UML include / extend (dashed)</text>
+<line x1="1280" y1="950" x2="1330" y2="950" stroke="#435466" stroke-width="2.4" stroke-dasharray="3 6" marker-end="url(#open)"/><text x="1340" y="955" font-family="Arial" font-size="14" fill="#52606d">Data-source dependency (dotted)</text>
+<text x="900" y="1005" text-anchor="middle" font-family="Arial" font-size="15" fill="#52606d">The dashboard queries both projections read-only; it does not invoke UC-04 persistence or UC-13 append behavior.</text>
+</svg>

@@ -1,0 +1,36 @@
+@startuml
+title UML Deployment Diagram — Proposed Ubuntu 24.04 Host
+top to bottom direction
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+actor "Sysadmin / SRE" as Admin
+node "Ubuntu 24.04 Linux host" <<device>> {
+  node "systemd-managed services" <<executionEnvironment>> {
+    artifact "Telemetry Collector\nPython process" as Collector
+    artifact "AI Inference Service\nPython process · model TBD" as Inference
+    artifact "Decision & Policy Service\nPython process" as Policy
+    artifact "Safety Watchdog\nPython process" as Watchdog
+    artifact "Resource Manager / Actuator\nPython process · Unix socket" as Actuator
+    artifact "Read-only Dashboard API\nPython process · FastAPI" as Dashboard
+  }
+  database "Telemetry & Read-Projection Store\nSQLite · local" as Telemetry
+  database "Audit Store\nSQLite · separate append-only database" as Audit
+  node "Linux kernel interfaces\nprocfs / PSI / cgroups v2" as Kernel
+}
+Admin --> Dashboard : read-only local HTTP GET
+Collector --> Kernel : read-only telemetry
+Collector --> Telemetry : accepted samples
+Inference --> Telemetry : bounded evidence read
+Policy --> Telemetry : context / projection
+Policy --> Inference : prediction request
+Policy --> Actuator : gated action request
+Watchdog --> Actuator : guarded recovery request
+Policy --> Audit : decision evidence
+Actuator --> Audit : action evidence
+Actuator --> Kernel : gated control / read-back
+Dashboard --> Telemetry : read-only projection
+Dashboard --> Audit : read-only audit summary
+note bottom
+This is a proposed single-host deployment. It uses UML device, executionEnvironment, and artifact elements and is distinct from C4 deployment view 05.
+@enduml

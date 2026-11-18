@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+title C4 System Context Diagram — AIOS
+AddRelTag("dashed", $lineStyle=DashedLine())
+Person(admin, "Sysadmin / SRE", "Reviews read-only status, recommendations, and audit projections")
+System(aios, "AIOS", "Monitors CPU, RAM, I/O, and pressure; builds decisions and applies policy-gated, verified actions")
+System_Ext(workloads, "Target workloads", "Explicitly selected Linux processes and cgroups")
+System_Ext(host, "Ubuntu 24.04 Linux host", "procfs / PSI observations and cgroup v2 controls")
+Rel(admin, aios, "Views read-only status", "Local HTTP GET", $tags="dashed")
+Rel(aios, workloads, "Reads per-process state", "procfs / cgroup v2", $tags="dashed")
+Rel(aios, host, "Requests guarded resource limits", "cgroups v2", $tags="dashed")
+Rel(workloads, host, "Runs on", "Ubuntu Linux", $tags="dashed")
+SHOW_LEGEND()
+@enduml

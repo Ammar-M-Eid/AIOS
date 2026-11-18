@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+skinparam componentStyle uml1
+title C4 Component Diagram — Telemetry Collector
+LAYOUT_LEFT_RIGHT()
+AddRelTag("dashed", $lineStyle=DashedLine())
+Container_Boundary(scope, "Telemetry Collector") {
+  Component(C1, "Sampling Cycle Coordinator", "Python · scheduler", "Starts bounded CPU, RAM, I/O, and pressure sampling cycles.")
+  Component(C2, "Host Observation Adapter", "psutil · procfs · PSI", "Reads host/process counters and supported I/O observations.")
+  Component(C3, "Optional Fixed Probe Adapter", "Optional eBPF", "Accepts only reviewed, fixed probes; disabled unless separately approved.")
+  Component(C4, "Sample Quality Gate", "Validation", "Rejects invalid units, stale timestamps, gaps, and malformed samples.")
+  Component(C5, "Process & Unit Normalizer", "Identity and schema adapter", "Normalizes resource identity, units, and freshness metadata.")
+  Component(C6, "SQLite Telemetry Writer", "SQLite", "Persists accepted records and bounded read projections.")
+}
+ContainerDb_Ext(S1, "Telemetry Store", "SQLite · separate local database", "Proposed persistent data store outside this scoped container")
+System_Ext(S2, "Ubuntu procfs / PSI / psutil", "Host-provided Linux interface")
+System_Ext(S3, "Ubuntu optional eBPF interface", "Host-provided Linux interface")
+Rel(C2, C1, "ISampleCycle", "Named local interface", $tags="dashed")
+Rel(C4, C2, "IRawHostSample", "Named local interface", $tags="dashed")
+Rel(C4, C3, "IRawProbeSample", "Named local interface", $tags="dashed")
+Rel(C5, C4, "IQualityCheckedSample", "Named local interface", $tags="dashed")
+Rel(C6, C5, "ITelemetryRecord", "Named local interface", $tags="dashed")
+Rel(C6, S1, "ITelemetryStoreWrite", "Named local interface", $tags="dashed")
+Rel(C2, S2, "IHostTelemetryRead", "Named local interface", $tags="dashed")
+Rel(C3, S3, "IFixedProbeRead", "Named local interface", $tags="dashed")
+note bottom
+This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.
+end note
+SHOW_LEGEND()
+@enduml

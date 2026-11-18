@@ -1,0 +1,28 @@
+%% SEQ-02: Collect, validate, and persist samples
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    participant SCH as Sampling Scheduler
+    participant COL as CPU/RAM/I-O/PSI Collector
+    participant LNX as /proc and cgroups v2
+    participant Q as Quality and Identity Gate
+    participant DB as Telemetry SQLite DB
+    participant WD as Watchdog
+    SCH->>COL: Sampling tick
+    COL->>LNX: Read host/process observations
+    LNX-->>COL: Values, source status, scope and counters
+    COL->>COL: Attach UTC and monotonic timestamps
+    opt Approved fixed eBPF probes enabled
+        COL->>LNX: Read approved probe observations
+    end
+    COL->>Q: Submit sample with PID and process start time
+    Q->>Q: Validate fields, units, freshness, source and deltas
+    alt Valid sample
+        Q->>DB: Append values and quality state within retention limits
+        DB-->>Q: Persisted
+        Q-->>WD: Freshness and heartbeat
+    else Stale, reset, identity change, denied or invalid
+        Q-->>WD: Mark stale or unsafe and exclude dependent values
+        Q->>DB: Record quality state, not fabricated zero
+    end
+    Note over Q,WD: Invalid evidence cannot authorize OS writes

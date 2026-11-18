@@ -1,0 +1,41 @@
+@startuml
+title UML Component Overview — AIOS Service Boundaries
+left to right direction
+skinparam componentStyle uml1
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 15
+component "Telemetry Collector\nCPU / RAM / I/O / PSI" as Collector
+component "AI Inference Service\nmodel boundary TBD" as Inference
+component "Decision & Policy Service\nper-process gates" as Policy
+component "Safety Watchdog\ninhibit / recovery" as Watchdog
+component "Resource Manager / Actuator\nonly proposed host writer" as Actuator
+component "Read-only Dashboard API" as Dashboard
+database "Telemetry & Read-Projection Store\nSQLite" as Telemetry
+database "Audit Store\nseparate SQLite" as Audit
+node "Linux host interfaces\nprocfs / PSI / cgroups v2" as Host
+interface "IInference" as IInference
+interface "ITelemetryRead" as ITelemetryRead
+interface "ITelemetryStoreWrite" as ITelemetryStoreWrite
+interface "IActionRequest / IActionOutcome" as IAction
+interface "IResourceControl" as IControl
+Collector ..> ITelemetryStoreWrite : writes accepted samples
+ITelemetryStoreWrite -- Telemetry
+Inference ..> ITelemetryRead : reads bounded evidence
+ITelemetryRead -- Telemetry
+Policy ..> IInference : requests prediction
+IInference -- Inference
+Policy ..> IAction : submits gated action
+IAction -- Actuator
+Actuator ..> IControl : applies and verifies
+IControl -- Host
+Collector ..> Host : reads telemetry
+Watchdog ..> Policy : inhibits new proposals
+Watchdog ..> Actuator : requests guarded recovery
+Policy ..> Audit : appends decision evidence
+Actuator ..> Audit : appends action evidence
+Dashboard ..> Telemetry : read-only projections
+Dashboard ..> Audit : read-only audit summary
+note bottom
+All controls are proposed. CPU, RAM, and I/O have separate capability and bounds checks; the dashboard has no write interface.
+@enduml

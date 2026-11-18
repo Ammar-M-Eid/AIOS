@@ -1,0 +1,19 @@
+%% SEQ-08: Read-only dashboard and audit projection
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    actor Viewer as Sysadmin / SRE
+    participant UI as Read-only Dashboard
+    participant API as Projection API
+    participant TDB as Telemetry/Decision SQLite DB
+    participant ADB as Separate Audit SQLite DB
+    Viewer->>UI: Open status and history
+    UI->>API: Request read-only projection
+    API->>TDB: Query metrics, predictions, mode and outcomes
+    TDB-->>API: Values with source/time/quality state
+    API->>ADB: Query audit summary and integrity status
+    ADB-->>API: Correlated summaries and chain status
+    API->>API: Apply privacy projection and redact sensitive fields
+    API-->>UI: Status, recommendations, health and outcomes
+    UI-->>Viewer: Show zero vs unavailable/stale/degraded/warming-up/denied
+    Note over UI,API: No actuator socket, command, approval or mode-change route

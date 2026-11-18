@@ -1,0 +1,60 @@
+@startuml
+title UML Activity — telemetry to bounded control
+!pragma useVerticalIf on
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor #475569
+skinparam activity {
+  BackgroundColor #EFF6FF
+  BorderColor #2563EB
+  FontColor #172554
+  DiamondBackgroundColor #FFF7ED
+  DiamondBorderColor #C2410C
+  DiamondFontColor #431407
+  StartColor #087F73
+  EndColor #334155
+}
+
+start
+:Collect CPU, RAM, I/O, and pressure signals;
+:Validate sample quality and process identity;
+if (Evidence valid and fresh?) then (yes)
+  :Persist telemetry;
+  :Read evidence and request inference;
+  :Build reasoned recommendation;
+  :Persist read-only projection;
+  if (Eligible target and enabled mode?) then (yes)
+    :Check policy, allowlist, and cooldown;
+    if (Policy admits bounded request?) then (yes)
+      :Send one resource-class request;
+      :Authenticate peer; recheck target and bounds;
+      if (Peer and request valid?) then (yes)
+        :Check matching CPU, RAM, or supported I/O gate;
+        if (Resource gate passes?) then (yes)
+          :Capture baseline; apply bounded control;
+          :Verify effect and append audit;
+          :Refresh read-only projection;
+          stop
+        else (no)
+          :Deny without an OS write; audit reason;
+          stop
+        endif
+      else (no)
+        :Reject without an OS write; audit security reason;
+        stop
+      endif
+    else (no)
+      :Keep recommendation only; audit policy reason;
+      stop
+    endif
+  else (no)
+    :Keep recommendation only; audit LEAVE reason;
+    stop
+  endif
+else (no)
+  :Reject invalid evidence; audit quality reason;
+  stop
+endif
+@enduml

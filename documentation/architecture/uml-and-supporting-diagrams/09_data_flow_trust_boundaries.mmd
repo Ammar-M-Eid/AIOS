@@ -1,0 +1,52 @@
+---
+title: "Data and Control Flow — Trust Boundaries and Resource Actions"
+---
+%% DFD-style view: every solid arrow is a labeled data or control flow; clusters mark trust boundaries
+flowchart TB
+  subgraph TB1["TB1 · Host/process input"]
+    direction LR
+    OS["Kernel + processes"] -->|"Observed counters / process state"| COL["Python collector\npsutil / optional eBPF / procfs PSI"] -->|"Candidate samples"| VAL["Validate identity, freshness\nand plausible values"]
+  end
+  subgraph TB2["TB2 · Local data and inference"]
+    direction LR
+    TEL[("SQLite\ntelemetry + read-only recommendation projection")]
+    INF["Generic inference\nper-process outputs"]
+    DEC["Decision builder"]
+    POL["Policy gate\nallowlist · bounds · rate limit"]
+  end
+  subgraph TB3["TB3 · Privileged handoff"]
+    direction LR
+    SOCK{{"Unix socket\nSO_PEERCRED checked by actuator"}}
+    ACT["Actuator\nrevalidate target + parameters"]
+    CTRL["cgroups v2\nbounded cpu.weight, memory.high, and supported io.weight/io.max; separately gated"]
+    SOCK -->|"Authenticated local request"| ACT -->|"Bounded write"| CTRL
+  end
+  subgraph TB4["TB4 · Untrusted viewer (read-only)"]
+    direction LR
+    OP["Human browser"]
+    API["FastAPI\nquery-only projection"]
+    OP -->|"Status query only"| API
+  end
+  VAL -->|"Accepted telemetry write"| TEL
+  INF -->|"Read telemetry window"| TEL
+  TEL -->|"Return accepted samples"| INF
+  INF -->|"Generic per-process outputs"| DEC
+  DEC -->|"Recommendation, reason, and bounded proposal"| POL
+  DEC -->|"Persist recommendation projection"| TEL
+  POL -->|"Reviewed host-local policy admits request"| SOCK
+  AUD[("Append-only hash-chain audit\nseparate logical store")]
+  POL -->|"Decision / denial record"| AUD
+  ACT -->|"Result / denial / rollback record"| AUD
+  VAL -->|"Invalid sample record"| AUD
+  API -->|"Read-only query"| TEL
+  TEL -->|"Return projection"| API
+  API -->|"Read-only query"| AUD
+  AUD -->|"Return audit projection"| API
+  WD["Watchdog"]
+  WD -->|"Block new proposals"| POL
+  WD -->|"Rollback request via same authenticated IPC"| SOCK
+  NOTE["DFD key: solid labeled arrows are data or control flows; cylinders are stores; clusters mark trust boundaries. The viewer has no flow to policy, IPC, actuator, or OS controls. Auth/network exposure and peer policy remain TBD."]
+  classDef bound fill:#f8fafc,stroke:#475569,stroke-width:1.5px,color:#0f172a,font-size:16px;
+  class TB1,TB2,TB3,TB4 bound;
+  classDef store fill:#fff7ed,stroke:#c2410c,color:#431407;
+  class TEL,AUD store;

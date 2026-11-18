@@ -1,0 +1,35 @@
+---
+title: "Per-Process Resource Decision and Independent Safety Gates"
+---
+%% Per-process decisions are advisory until policy, peer, and actuator checks all pass
+flowchart TB
+P["Validated process snapshot\nPID + start time + quality flags"]-->INF["Generic CPU / memory / I/O\nprediction outputs"]-->DEC["Autonomous decision builder\nprocess + host context"]-->REC["Per-process recommendation\naction + reason + uncertainty"]-->POL{"Eligible, fresh, and within host-local policy?"}
+POL--"No / uncertain"-->LEAVE["LEAVE / deny\nno OS change; audit reason"]
+POL--Yes-->MODE{"Runtime mode"}
+MODE--"OBSERVE_ONLY default"-->SHOW["Store recommendation projection\nread-only dashboard view"]
+MODE--"Resource control enabled for this target"-->KIND{"Target and action class?"}
+KIND--"CPU request"-->CPU_GATE{"CPU capability, target, and bounds pass?"}
+CPU_GATE--Yes-->CPU["Capture prior value; bounded cpu.weight"]
+CPU_GATE--No-->FUTURE
+KIND--"RAM request"-->RAM_GATE{"RAM capability, target, and bounds pass?"}
+RAM_GATE--Yes-->RAM["Capture prior value; bounded memory.high"]
+RAM_GATE--No-->FUTURE
+KIND--"I/O request"-->IO_GATE{"I/O controller, device, target, and bounds pass?"}
+IO_GATE--Yes-->IO["Capture prior device value; bounded I/O control"]
+IO_GATE--No-->FUTURE
+KIND--"Unsupported / denied"-->FUTURE["Recommendation only\nno memory.max / process kill"]
+CPU-->|"Bounded CPU request"|AUTH["Unix socket + SO_PEERCRED\nactuator authenticates peer and repeats checks"]
+RAM-->|"Bounded RAM request"|AUTH
+IO-->|"Bounded I/O request"|AUTH
+AUTH-->|"Authenticated request"|APPLY{"Identity, target and bounds still valid?"}
+APPLY--No-->LEAVE
+APPLY--Yes-->EFFECT["Fixed resource adapter; no shell commands"]-->VERIFY["Verify effective control"]-->LOG["Append action outcome"]
+SHOW-->AUDIT["Append recommendation, denial, action, or fallback event"]
+FUTURE-->AUDIT
+LEAVE-->AUDIT
+LOG-->AUDIT
+WD["Watchdog fault"]-.->INHIBIT["Block new AI proposals"]-.->ROLL["Use same authenticated socket; validate watchdog, target, and baseline"]-.->RSAFE{"Target and captured baseline still verified?"}
+RSAFE--Yes-->RESTORE["Restore captured CPU, RAM, or I/O value"]-.->RVERIFY["Verify rollback and append fallback event"]-.->AUDIT
+RSAFE--No-->RFAIL["Fail closed; no write; append reason"]-.->AUDIT
+USER["Viewer reads output only"]-.->SHOW
+NOTE["Dashed connectors identify watchdog/viewer context; every CPU, RAM, and I/O action has its own capability and bounds gate. The viewer cannot change policy, mode, target, or action."]-.->POL

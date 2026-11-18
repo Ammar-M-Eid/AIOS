@@ -1,0 +1,14 @@
+﻿template_element,evidence,status_or_action
+Introduction and motivation,"Research draft defines purpose, motivation and problem framing.",Team names/responsibilities need confirmation.
+Background,"PSI, cgroups v2, systemd, current/reactive baseline explained.",Verify target host versions.
+Problem and importance,Testable problem statement without unsupported statistics.,No local survey or numerical demand evidence supplied.
+Available solutions,"PSI, systemd-oomd, prior work and solution approaches compared.",Confirm target configuration and exact baseline behavior.
+Proposed solution,Model-independent design and bounded safety path documented.,Team validates scope and approved initial action.
+Local/global market needs,Market-need matrix; interview guide and anonymous response template in 10_Evidence_Closure.,Protocol ready; no participant responses collected.
+Literature review,Research draft plus targeted source/query log and source-to-claim limits in 10_Evidence_Closure.,Primary-source scoping search recorded; not a systematic review; supervisor review pending.
+User analysis,Read-only viewer plus interview protocol about needs; users never control AIOS.,No interviews collected; no roles invented.
+Requirements,"Full SRS decomposed into hierarchical 1.x.y leaf requirements; detailed priorities, verification methods, evidence limitations, legacy FR/NFR crosswalk, and need-to-feature traceability are supplied.","Team confirms priorities, thresholds, interfaces, stakeholder groups, and action bounds; evidence remains pending where marked."
+Dataset preparation,"Read-only collector, one-minute Ubuntu 26.04.1 VM sample, environment metadata, host-only CSV, manifest, and Ubuntu benchmark-record template.",Passive VM sample captured; target Ubuntu 24.04 recording and benchmark remain pending.
+Design,"Fifteen diagrams (14 Mermaid, 1 PlantUML), wireframe, review log, safety acceptance cases, and CPU profile.",Design ready for review; security cases and target-host measurements not run.
+Schedule,Editable Gantt and SPMP month windows.,Only 19 Nov 2026 is a supplied date; confirm others.
+"20-minute, ≤50% text, visual support",Written timing map and diagram sources support later deck preparation.,No slides created now; do not read slide text aloud.

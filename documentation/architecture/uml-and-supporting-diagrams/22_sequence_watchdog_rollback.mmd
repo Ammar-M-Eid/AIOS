@@ -1,0 +1,26 @@
+%% SEQ-07: Watchdog inhibit and guarded rollback
+%% Behavior trace is in 02_Requirements/AIOS_Requirement_Behavior_Traceability.csv
+sequenceDiagram
+    autonumber
+    participant WD as Independent Watchdog
+    participant RT as Runtime Services
+    participant POL as Policy Gate
+    participant ACT as Actuator
+    participant K as cgroups v2 controls
+    participant AUD as Append-only Audit DB
+    WD->>RT: Check heartbeat and input freshness independently
+    RT--xWD: Missed heartbeat, stale evidence or unsafe health
+    WD->>POL: Latch inhibit, reject new OS writes
+    WD->>ACT: Request fallback for recorded AIOS changes
+    ACT->>ACT: Verify cgroup identity and AIOS ownership
+    alt CPU/RAM target identity matches
+        ACT->>K: Restore captured prior value
+        ACT->>K: Read back and verify
+    else I/O target and device both match
+        ACT->>K: Restore prior value for same device
+        ACT->>K: Read back and verify
+    else Identity or ownership fails
+        ACT-->>WD: Do not write, flag review
+    end
+    WD->>AUD: Append trigger, inhibit and recovery evidence
+    Note over WD,K: Linux native scheduling and memory management remain authoritative
