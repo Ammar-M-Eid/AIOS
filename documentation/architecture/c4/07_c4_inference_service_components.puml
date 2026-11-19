@@ -18,7 +18,7 @@ Rel(C1, C2, "loads bounded evidence window", "IEvidenceWindow", $tags="dashed")
 Rel(C2, S2, "reads telemetry history", "ITelemetryRead", $tags="dashed")
 Rel(C1, C3, "invokes model adapter", "IModelRuntime", $tags="dashed")
 Rel(C1, C4, "validates prediction and freshness", "IPredictionValidation", $tags="dashed")
-Rel(C4, C3, "supplies prediction result", "IGenericPredictionResult", $tags="dashed")
+Rel(C4, C3, "reads prediction result from", "IGenericPredictionResult", $tags="dashed")
 Rel(C3, S3, "invokes inference runtime", "IGenericInferenceRuntime", $tags="dashed")
 note bottom
 This editable source uses C4 element and relationship macros. The synchronized SVG/PDF/PNG/JPG rendering adds the requested UML1 component tabs, square ports, required sockets, and provided lollipops. Dashed dependency arrows are the project convention.

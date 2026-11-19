@@ -19,7 +19,7 @@ ContainerDb_Ext(S5, "Telemetry & Read-Projection Store", "SQLite · separate loc
 Rel(C2, C1, "uses health snapshot from", "IHealthSnapshot", $tags="dashed")
 Rel(C3, C2, "uses safety state from", "ISafetyState", $tags="dashed")
 Rel(C4, C2, "uses safety state from", "ISafetyState", $tags="dashed")
-Rel(C3, S1, "inhibits new writes in", "IPolicyInhibit", $tags="dashed")
+Rel(C3, S1, "requests policy write inhibition through", "IPolicyInhibit", $tags="dashed")
 Rel(C4, S2, "calls the authenticated actuator", "IActuatorEndpoint", $tags="dashed")
 Rel(C5, C2, "uses safety state from", "ISafetyState", $tags="dashed")
 Rel(C5, S3, "appends audit record to", "IAuditStoreWrite", $tags="dashed")

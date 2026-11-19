@@ -28,3 +28,6 @@ For related UML, sequence, activity, use-case, state, class, data-flow, and deci
 ## Component relationship label clarification — 19 November 2026
 
 Each component connector is labeled with both the consumer action and the named interface contract (for example, “validates request using · IRequestValidation”). The label sits beside the dashed relationship without an opaque white background, so the connector path remains visible. Arrowheads point from the component requiring a service toward its provider. Request/response exchanges carried over one connection use the same endpoint contract.
+## Visual QA refinement — 19 November 2026
+
+Relationship labels across the C4 set now have transparent backgrounds so they do not erase dashed connector paths. Labels sit beside the routes; context labels were repositioned where they approached node boundaries. Component relation text was enlarged slightly and uses caller-action wording followed by the required/provided interface name. Wording was corrected for the prediction-result, policy-inhibit, and guarded-actuation contracts. All SVG, PNG, JPG, and PlantUML exports have been regenerated from the same source.
