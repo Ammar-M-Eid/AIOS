@@ -18,7 +18,7 @@
 | Process | PID + start time, status, CPU %, RSS, optional I/O | Nullable; partial visibility is explicit |
 | Quality | Freshness, warm-up, unsupported, denied, parse error, reset | Null + reason; no zero-fill |
 
-JSON Lines is proposed for portable recordings; SQLite is proposed for accepted telemetry and a bounded read-only recommendation projection; the append-only hash-chain audit is a separate logical store. Candidate relational schemas and EERDs are provided in `14_Data_Model`; exact fields, JSON envelopes, retention, prediction contract, REST paths and socket messages remain unapproved and require team agreement.
+JSON Lines is proposed for portable recordings; SQLite is proposed for accepted telemetry and a bounded read-only recommendation projection; the append-only hash-chain audit is a separate logical store. Candidate relational schemas and EERDs are provided in [`data-model/`](../data-model/); exact fields, JSON envelopes, retention, prediction contract, REST paths and socket messages remain unapproved and require team agreement.
 
 ## User-facing boundary
 - Human access is through a read-only dashboard projection for status, recommendations, safety health and audit history.

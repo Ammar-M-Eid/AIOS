@@ -1,33 +1,36 @@
-# C4 architecture set
+# AIOS C4 architecture
 
-These are the current C4 views for the AIOS proposed Linux resource optimizer. Every diagram includes an editable PlantUML source (`.puml`) and scalable SVG and PNG exports. The complete relationship review is in [AIOS_C4_Notation_and_Relationship_Review.md](AIOS_C4_Notation_and_Relationship_Review.md).
+This is the curated mirror of the active C4 diagrams in the project workspace. It contains 14 views: system context, container architecture, six scoped component views, dynamic behavior, deployment, and four focused container-relationship views. The service-oriented design is not arranged into horizontal layers.
 
-| ID | View | File stem |
-|---|---|---|
-| 01 | System context | `01_c4_system_context` |
-| 02 | Container architecture | `02_c4_container_architecture` |
-| 03 | Resource Manager / Actuator components | `03_c4_actuator_components` |
-| 04 | Dynamic telemetry-to-action flow | `04_c4_dynamic_telemetry_to_action` |
-| 05 | Proposed Ubuntu deployment | `05_c4_ubuntu_deployment` |
-| 06 | Telemetry Collector components | `06_c4_telemetry_collector_components` |
-| 07 | AI Inference Service components | `07_c4_inference_service_components` |
-| 08 | Decision and Policy Service components | `08_c4_decision_policy_components` |
-| 09 | Safety Watchdog components | `09_c4_safety_watchdog_components` |
-| 10 | Read-only Dashboard API components | `10_c4_dashboard_api_components` |
-| 12 | Container data dependencies | `12_c4_container_data_dependencies` |
-| 13 | Container audit dependencies | `13_c4_container_audit_dependencies` |
-| 14 | Policy, watchdog, and recovery dependencies | `14_c4_container_policy_watchdog_dependencies` |
-| 15 | Policy data dependencies | `15_c4_container_policy_data_dependencies` |
+## Diagram index
 
-Relationships in this project’s C4 views are drawn as dashed, directed arrows as a visual convention. Dashed lines are not a universal C4 requirement. Component diagrams use the project’s adjacent double-tab component glyph convention and show named interfaces. The deployment and dynamic views are labeled for their distinct purpose rather than treated as additional static C4 levels.
+Editable PlantUML sources and rendered SVG, PNG, and JPG files are colocated in this folder.
 
-The architecture is a design proposal. Linux interface availability, target Ubuntu behavior, I/O control support, and safe actuation/rollback require implementation and target-host validation. `OBSERVE_ONLY` is the default; people use read-only dashboard views.
+| ID | View | Source | PNG |
+|---|---|---|---|
+| 01 | System Context | [PlantUML](01_c4_system_context.puml) | [PNG](01_c4_system_context.png) |
+| 02 | Container Architecture | [PlantUML](02_c4_container_architecture.puml) | [PNG](02_c4_container_architecture.png) |
+| 03 | Actuator Components | [PlantUML](03_c4_actuator_components.puml) | [PNG](03_c4_actuator_components.png) |
+| 04 | Dynamic Telemetry-to-Action | [PlantUML](04_c4_dynamic_telemetry_to_action.puml) | [PNG](04_c4_dynamic_telemetry_to_action.png) |
+| 05 | Ubuntu Deployment | [PlantUML](05_c4_ubuntu_deployment.puml) | [PNG](05_c4_ubuntu_deployment.png) |
+| 06 | Telemetry Collector Components | [PlantUML](06_c4_telemetry_collector_components.puml) | [PNG](06_c4_telemetry_collector_components.png) |
+| 07 | AI Inference Components | [PlantUML](07_c4_inference_service_components.puml) | [PNG](07_c4_inference_service_components.png) |
+| 08 | Decision and Policy Components | [PlantUML](08_c4_decision_policy_components.puml) | [PNG](08_c4_decision_policy_components.png) |
+| 09 | Safety Watchdog Components | [PlantUML](09_c4_safety_watchdog_components.puml) | [PNG](09_c4_safety_watchdog_components.png) |
+| 10 | Dashboard API Components | [PlantUML](10_c4_dashboard_api_components.puml) | [PNG](10_c4_dashboard_api_components.png) |
+| 12 | Dashboard and Telemetry Relationships | [PlantUML](12_c4_container_data_dependencies.puml) | [PNG](12_c4_container_data_dependencies.png) |
+| 13 | Audit Relationships | [PlantUML](13_c4_container_audit_dependencies.puml) | [PNG](13_c4_container_audit_dependencies.png) |
+| 14 | Policy and Watchdog Relationships | [PlantUML](14_c4_container_policy_watchdog_dependencies.puml) | [PNG](14_c4_container_policy_watchdog_dependencies.png) |
+| 15 | Policy and Telemetry Relationships | [PlantUML](15_c4_container_policy_data_dependencies.puml) | [PNG](15_c4_container_policy_data_dependencies.png) |
 
-For related UML, sequence, activity, use-case, state, class, data-flow, and decision diagrams, see [the supporting diagram set](../uml-and-supporting-diagrams/AIOS_Diagram_Notation_Audit.md).
+## Relationship and component conventions
 
-## Component relationship label clarification — 19 November 2026
+The main container diagram shows the primary monitor-to-action route. Views 12–15 put the remaining container connections directly on diagrams. The six component views each decompose one service and together show 31 component glyphs. Every component has paired compact tabs near its upper-left, named required/provided interfaces, and labeled connectors.
 
-Each component connector is labeled with both the consumer action and the named interface contract (for example, “validates request using · IRequestValidation”). The label sits beside the dashed relationship without an opaque white background, so the connector path remains visible. Arrowheads point from the component requiring a service toward its provider. Request/response exchanges carried over one connection use the same endpoint contract.
-## Visual QA refinement — 19 November 2026
+Relationships use dashed, directed arrows as an explicit project convention. Arrows point from the consumer to its provider. C4 itself does not require dashed lines. Required and provided interface names do not replace the labeled relationship between them.
 
-Relationship labels across the C4 set now have transparent backgrounds so they do not erase dashed connector paths. Labels sit beside the routes; context labels were repositioned where they approached node boundaries. Component relation text was enlarged slightly and uses caller-action wording followed by the required/provided interface name. Wording was corrected for the prediction-result, policy-inhibit, and guarded-actuation contracts. All SVG, PNG, JPG, and PlantUML exports have been regenerated from the same source.
+## Safety boundary and evidence status
+
+The collector and dashboard are read-only. The actuator is the only proposed host-resource writer. `OBSERVE_ONLY` is the default. Candidate cgroup v2 controls are CPU `cpu.weight`, RAM `memory.high`, and supported I/O `io.weight` or `io.max`, each behind a separate capability and safety gate. These diagrams describe a proposed design; they do not prove integrated implementation, Ubuntu 24.04 validation, safe live actuation, or workload benefit.
+
+See the [C4 notation and relationship review](AIOS_C4_Notation_and_Relationship_Review.md), [supporting diagram guide](../uml-and-supporting-diagrams/AIOS_Diagram_Guide.pdf), and [final engineering review](../../research-and-evidence/AIOS_Final_Software_Engineering_Review.md). The authoritative working copies are under `11_C4_Architecture` in the A: project workspace.

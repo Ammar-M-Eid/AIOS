@@ -1,9 +1,9 @@
 # AIOS Software Engineering Presentation — slide and speaker guide
 
-**Presentation:** `AIOS_Software_Engineering_Presentation_Final_2026-11-17_University_Rubric_v4_Source_Diagrams.pptx`  
-**Audience:** GP1 midterm committee  
-**Talk timing:** 16:05 planned presentation + 3:55 Q&A  
-**Visible story:** Slides 1–25  
+**Presentation:** `AIOS_Software_Engineering_Presentation_Final_2026-11-19_University_Rubric_v5_Updated_C4.pptx`<br>
+**Audience:** GP1 midterm committee<br>
+**Talk timing:** 16:05 planned presentation + 3:55 Q&A<br>
+**Visible story:** Slides 1–25<br>
 **Hidden technical backup:** Slides 26–37 (A1–A12)
 
 The deck uses the supplied university template and follows the presentation rubric’s problem/research, related work, method, software design, evidence, plan, and delivery expectations. Cover roster: Ammar, Mazen, Hana, Hany, Noreen. Supervisor: Prof. Dr. Ahmed Younes.
@@ -25,7 +25,7 @@ All architecture, sequence, and evaluation plans are **proposed** unless a slide
 | 8 | Actuator component view | Show the narrow actuator boundary and its checks before Linux controls. | C4 actuator component diagram picture with compact adjacent tabs and dashed relationships. |
 | 9 | Use C4 for architecture, UML for behavior, DFD for data | Explain why each notation is used for its intended view and how the diagrams complement each other. | Notation comparison and sources. |
 | 10 | Every proposed resource action follows one guarded path | Trace collection, validation, inference, decision, policy admission, authenticated local IPC, target revalidation, bounded write/read-back, audit and recovery. | Original authenticated-action sequence picture; not rebuilt from slide shapes. |
-| 11 | Requirements turn safety claims into checks | Describe SRS v2 and planned negative/fault checks. Make clear the tests are not reported as executed. | 52 hierarchical leaf requirements and acceptance cases. |
+| 11 | Requirements turn safety claims into checks | Describe SRS v2.1 and planned negative/fault checks. Make clear the tests are not reported as executed. | 52 hierarchical leaf requirements and acceptance cases. |
 | 12 | Dataset plan: target-host runs are primary candidate | Separate the retained passive capture, planned Ubuntu 24.04 runs, auxiliary public traces, and synthetic pipeline stress. No evaluation set is claimed as selected. | Dataset sources and their roles; passive capture proves collection/provenance only. |
 | 13 | Evaluate cost and benefit before enabling control | Compare no AIOS, observe-only, and reviewed-control conditions. Measure workload result, overhead, safety, freshness and data quality. | Proposed matched evaluation design; thresholds require team agreement. |
 | 14 | Three gates control design through evaluation | Present scope/contract agreement, observe-only integration, then evaluation after safety tests and workload benchmarks. | Three delivery gates; dates/owners require confirmation. |
@@ -56,7 +56,7 @@ Use these after the main talk when a question needs a closer technical view. The
 - **A9 — C4 dynamic telemetry-to-action** — source project diagram remains an image.
 - **A10 — C4 Ubuntu deployment** — source project diagram remains an image.
 - **A11 — C4 inference service components** — source project diagram remains an image.
-- **A12 — C4 whole-system component overview** — source project diagram remains an image.
+- **A12 — C4 container data dependencies** — source project diagram remains an image.
 
 ## Presenter notes and claim boundaries
 
@@ -75,4 +75,3 @@ Use these after the main talk when a question needs a closer technical view. The
 - UML, DFD and authenticated-action sequence: `01_Diagrams/`.
 - Requirements, evidence, estimate, risk and Scrum plan: `02_Requirements/`, `10_Evidence_Closure/`, and this folder’s `AIOS_Software_Engineering_Estimates_Risks_Scrum_Plan.md`.
 - Final artifact checks and limits: `AIOS_Software_Engineering_Presentation_QA.md`.
-

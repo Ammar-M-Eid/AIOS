@@ -44,9 +44,9 @@ The relational structures are candidates derived from the existing telemetry/int
 
 ## References to project evidence
 
-- `../03_Data_Collection/AIOS_Telemetry_Interface_Spec.md` — candidate signals, time basis, missing-data, privacy, projection, and safety boundaries.
-- `../03_Data_Collection/recordings/2026-11-13_ubuntu-vm-01/telemetry.jsonl` — passive capture sample format only.
-- `../02_Requirements/AIOS_Resource_Control_Scope.md` — product resource/control scope and excluded actions.
-- `../02_Requirements/Ammar_Requirements_Traceability.csv` — persistence, inference traceability, audit, and read-only-view requirements.
-- `../01_Diagrams/10_logical_data_model.mmd` — conceptual domain model, not a physical schema.
+- [`AIOS_Telemetry_Interface_Spec.md`](../telemetry-and-operations/AIOS_Telemetry_Interface_Spec.md) — candidate signals, time basis, missing-data, privacy, projection, and safety boundaries.
+- [`Telemetry_Recording_Status.md`](../telemetry-and-operations/Telemetry_Recording_Status.md) — provenance and limits of the retained passive capture; the raw recording remains in the source workspace.
+- [`AIOS_Resource_Control_Scope.md`](../requirements/AIOS_Resource_Control_Scope.md) — product resource/control scope and excluded actions.
+- [`Ammar_Requirements_Traceability.csv`](../requirements/Ammar_Requirements_Traceability.csv) — detailed requirement priorities, verification methods, evidence limits, and status.
+- [`10_logical_data_model.mmd`](../architecture/uml-and-supporting-diagrams/10_logical_data_model.mmd) — conceptual domain model, not a physical schema.
 

@@ -12,7 +12,7 @@
 
 ## Relationship to existing project artifacts
 
-The earlier [conceptual data model](../01_Diagrams/10_logical_data_model.mmd) remains a technology-independent view of domain concepts. These EERDs add candidate relational structures and keys using crow-foot cardinalities. They show keys and representative fields; the SQL is the complete column and constraint definition. These are EERDs, not UML diagrams, and do not replace that conceptual view. The [telemetry interface specification](../03_Data_Collection/AIOS_Telemetry_Interface_Spec.md) remains the authoritative draft for collection scope and privacy boundaries.
+The earlier [conceptual data model](../architecture/uml-and-supporting-diagrams/10_logical_data_model.mmd) remains a technology-independent view of domain concepts. These EERDs add candidate relational structures and keys using crow-foot cardinalities. They show keys and representative fields; the SQL is the complete column and constraint definition. These are EERDs, not UML diagrams, and do not replace that conceptual view. The [telemetry interface specification](../telemetry-and-operations/AIOS_Telemetry_Interface_Spec.md) remains the authoritative draft for collection scope and privacy boundaries.
 
 The main SQLite store supports bounded local telemetry and read-only recommendation projection. Audit is a separate logical store with no cross-database foreign keys; the telemetry and audit records correlate through opaque IDs (`correlation_id`, and where supplied `run_id`, `decision_id`, or `action_attempt_id`). The viewer is query-only. No schema grants a user a command, approval, mode-change, policy-edit, or actuation path.
 

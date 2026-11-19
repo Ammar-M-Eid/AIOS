@@ -1,7 +1,7 @@
 # AIOS Diagram Notation Audit
 
-**Review date:** 18 November 2026  
-**Scope:** 24 numbered supporting views in this folder, 14 C4 views in `11_C4_Architecture`, and the project Gantt view.  
+**Review date:** 19 November 2026<br>
+**Scope:** 24 numbered supporting views in this folder, 14 C4 views in `11_C4_Architecture`, and the project Gantt view.<br>
 **Review basis:** UML 2.5.1 from OMG, official PlantUML and Mermaid syntax guides, C4 notation guidance, and visual inspection of the rendered exports.
 
 This audit checks whether each view uses a notation suited to its purpose, whether relationships point and read correctly, and whether labels and legends explain the diagram. It reviews design artifacts only. A diagram does not prove that a service, interface, control, deployment, or safety property is implemented or validated.
@@ -43,10 +43,11 @@ UML is used for static structure and runtime behavior that benefit from UML sema
 
 | IDs | View | Review result |
 |---|---|---|
-| 01–02 | System context and container architecture | C4 element types, responsibilities, relationships, and technology/protocol labels are provided where known. Human access remains read-only. |
-| 03, 06–11 | Six scoped component views and the whole-system component inventory | Seven views contain 62 displayed component glyphs representing 31 unique components. Each component uses the requested compact UML1 double-tab glyph. The six scoped views show labeled, dashed interface arrows; the whole-system view inventories components without duplicating the network. All 20 cross-container connections are visible on C4 container diagram 02. |
-| 04 | Dynamic telemetry-to-action scenario | C4 supporting dynamic view shows a numbered nominal accepted action. Rejection and recovery branches are covered in the UML activity/sequence views. |
-| 05 | Ubuntu deployment view | C4 deployment view shows proposed instance placement. It is distinct from the UML deployment view in Diagram 08. |
+| 01 | System context | Shows the read-only Sysadmin/SRE, AIOS system boundary, selected workloads, and Ubuntu/Linux host using C4 element types and labeled project relationships. |
+| 02, 12–15 | Container architecture and focused relationship views | The main container view shows the primary monitor-to-action path. Four focused diagrams expose the remaining dashboard, telemetry, audit, policy, and watchdog relationships. Relationships are visible on diagrams rather than deferred to a matrix. Stores use database notation; application containers are labeled boxes. |
+| 03, 06–10 | Six scoped component views | Each view decomposes one C4 container. Across the six views, 31 displayed component glyphs use compact paired UML1 tabs at the upper-left. Named required/provided interfaces and labeled dashed, directed connectors are visible. The dashed-arrow convention is project styling, not a C4 requirement. |
+| 04 | Dynamic telemetry-to-action scenario | Shows one nominal accepted action in sequence; rejection and recovery branches are covered by the UML activity and sequence views. |
+| 05 | Ubuntu deployment view | Shows proposed single-host placement and host-facing interfaces; distinct from UML deployment Diagram 08. |
 
 ## Cross-view consistency checks
 
